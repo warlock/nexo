@@ -1,7 +1,7 @@
 {
   "name": "nexo",
   "version": "0.0.1",
-  "description": "Javascript frontend framework",
+  "description": "Lightweight components for javascript",
   "main": "nexo.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
