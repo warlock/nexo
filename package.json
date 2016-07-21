@@ -1,0 +1,20 @@
+{
+  "name": "nexo",
+  "version": "0.0.1",
+  "description": "Javascript frontend framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/warlock/nexo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/warlock/nexo/issues"
+  },
+  "homepage": "https://github.com/warlock/nexo#readme"
+}
