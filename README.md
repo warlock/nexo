@@ -2,6 +2,18 @@
 
 >A lightweight framework for creating web components in **Javascript**
 
+https://www.npmjs.com/package/nexo
+
+###Documentation
+```
+https://warlock.gitbooks.io/nexo/content
+```
+
+###Install
+```sh
+npm install nexo
+```
+
 ###Import module for Node.js:
 ```javascript
 var n = require("nexo");
