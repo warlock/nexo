@@ -35,4 +35,4 @@ var nexo  = {
 	}
 }
 
-if (typeof process == 'object') module.exports = nexo
+if (typeof process === 'object') module.exports = nexo
