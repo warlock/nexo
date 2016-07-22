@@ -5,9 +5,7 @@
 https://www.npmjs.com/package/nexo
 
 ###Documentation
-```
 https://warlock.gitbooks.io/nexo/content
-```
 
 ###Install
 ```sh
