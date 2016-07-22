@@ -26,6 +26,21 @@ n.ready(function () {
 </script>
 ```
 
+###Demo:
+```javascript
+n.set('button', function (comp, data) {
+    return '<b id="click_now">Clickme ' + data + '!</b>';
+}, function (comp, data) {
+    n.on(n.id('click_now'), 'click', function () {
+      console.log("Hi!");
+    });
+});
+
+n.ready(function () {
+	n.render('button', 'main_div', 'Now');
+});
+```
+
 ## License
 All the code here is under MIT license. Which means you could do virtually anything with the code.
 I will appreciate it very much if you keep an attribution where appropriate.
