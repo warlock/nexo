@@ -1,6 +1,13 @@
-var nexo  = {
+var n  = {
+	store : new Map(),
 	data : {},
 	stack : [],
+	id : function (id) {
+		return document.getElementById(id);
+	},
+	class : function (id) {
+		return document.getElementsByClassName(id);
+	},
 	run : function () {
 		for (var i = 0; i < this.stack.length; i++) this.stack[i].action(this.stack[i].attr[0], this.stack[i].attr[1]);
 		this.stack = [];
@@ -26,13 +33,7 @@ var nexo  = {
 		obj.addEventListener(eventHandler, function (event) {
 			callback(event);
 		});
-	},
-	id : function (id) {
-		return document.getElementById(id);
-	},
-	class : function (id) {
-		return document.getElementsByClassName(id);
 	}
 }
 
-if (typeof process === 'object') module.exports = nexo
+if (typeof process === 'object') module.exports = n
