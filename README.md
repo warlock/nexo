@@ -1,5 +1,4 @@
 # nexo
-
 >A lightweight framework for creating web components in **Javascript**
 
 https://www.npmjs.com/package/nexo
