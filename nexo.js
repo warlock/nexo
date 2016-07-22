@@ -33,6 +33,11 @@ var n  = {
 		obj.addEventListener(eventHandler, function (event) {
 			callback(event);
 		});
+	},
+	ready : function (callback) {
+		document.addEventListener("DOMContentLoaded", function(event) {
+			callback(event)
+		})
 	}
 }
 
