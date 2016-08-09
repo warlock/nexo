@@ -42,9 +42,6 @@ n.ready(function () {
 ```
 
 ## License
-All the code here is under MIT license. Which means you could do virtually anything with the code.
-I will appreciate it very much if you keep an attribution where appropriate.
-
 The MIT License (MIT)
 Copyright (c) 2015 Josep Subils Rigau (josep@spellbook.io)
 

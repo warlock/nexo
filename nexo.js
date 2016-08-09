@@ -1,8 +1,51 @@
 var n = {
-	store : new Map(),
 	data : {},
 	stack : [],
-	empty : function(val) {
+	relations : {},
+	model : {
+		store : {},
+		set : function (key, data) {
+			if (data instanceof Array) this.store[key] = data;
+			else this.store[key] = [data];
+			this.store[key].name = 'model';
+			this.store[key].model = key;
+			this.render(key);
+		},
+		get : function (key) {
+			return this.store[key];
+		},
+		push : function (key, data) {
+			this.store[key].push(data);
+			this.render(key);
+		},
+		pop : function (key) {
+			var ret = this.store[key].pop();
+			this.render(key);
+			return ret;
+		},
+		shift : function (key) {
+			var ret = this.store[key].shift();
+			this.render(key);
+			return ret;
+		},
+		reverse : function (key) {
+			var ret = this.store[key].reverse();
+			this.render(key);
+			return ret;
+		},
+		size : function (key) {
+			return this.store[key].length;
+		},
+		length : function (key) {
+			return this.store[key].length;
+		},
+		render : function (key) {
+			for(k in n.relations){
+				if(n.relations[k].model ==  key) n.render(n.relations[k].comp, k, n.model.get(key))
+			}
+		}
+	},
+	empty : function (val) {
 		return val === undefined || val === null || val === '';
 	},
 	id : function (id) {
@@ -42,14 +85,16 @@ var n = {
 		else if (this.empty(id)) throw 'Error: render without objective';
 		else {
 			document.getElementById(id).innerHTML = this.data[name].html(this, attr);
+			if (!this.empty(attr) && !this.empty(attr.name) && attr.name === 'model') this.relations[id] = { comp : name, model : attr.model };
+			else if (!this.empty(this.relations[id])) delete this.relations[id];
 			if (typeof this.data[name].action === 'function') this.stack.push({ action : this.data[name].action, attr : [this, attr]});
 			this.run();
 		}
 	},
 	on : function (obj, eventHandler, callback) {
 		if (sb.empty(obj)) throw 'Error: event without objective';
-		else if (sb.empty(eventHandler)) 'Error: event without event handler';
-		else if (sb.empty(callback)) 'Error: event without function';
+		else if (sb.empty(eventHandler)) throw 'Error: event without event handler';
+		else if (sb.empty(callback)) throw 'Error: event without function';
 		else {
 			obj.addEventListener(eventHandler, function (event) {
 				callback(event);
@@ -58,9 +103,9 @@ var n = {
 	},
 	ready : function (callback) {
 		document.addEventListener("DOMContentLoaded", function(event) {
-			callback(event)
-		})
+			callback(event);
+		});
 	}
-}
+};
 
-if (typeof process === 'object') module.exports = n
+if (typeof process === 'object') module.exports = n;

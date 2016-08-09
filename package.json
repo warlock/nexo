@@ -1,6 +1,6 @@
 {
   "name": "nexo",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Lightweight components for javascript",
   "main": "nexo.js",
   "scripts": {
@@ -12,7 +12,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/warlock/nexo/issues"
   },
