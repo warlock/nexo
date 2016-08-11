@@ -71,7 +71,7 @@ var n = {
 		if (this.empty(name)) throw new Error('Component without name.');
 		else if (this.empty(html)) throw new Error('Component \'' + name + '\' without html.');
 		else if (this.data[name] === 'undefined') throw new Error('Component \'' + name + '\' does not exists.');
-		else if (this.empty(this.data[name].html)) throw new Error('The component \'' + name + '\' does not have html.');
+		else if (this.data[name].html === 'undefined') throw new Error('The component \'' + name + '\' does not have html.');
 		else {
 			this.data[name] = {};
 			this.data[name].html = html;
