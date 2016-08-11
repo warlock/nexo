@@ -1,6 +1,6 @@
 {
   "name": "nexo",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Lightweight components for javascript",
   "main": "nexo.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "type": "git",
     "url": "git+https://github.com/warlock/nexo.git"
   },
-  "keywords": [],
+  "keywords": ["frontend","client-side", "browser", "framework", "angular", "component", "components", "framework","gui","form","website","model","website"],
   "author": "",
   "license": "MIT",
   "bugs": {
