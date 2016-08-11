@@ -68,10 +68,10 @@ var n = {
 		}
 	},
 	set : function (name, html, action) {
-		if (this.empty(name)) throw new Error('Set component without name.');
-		else if (this.empty(html)) throw new Error('Set component without html.');
-		else if (this.empty(this.data[name])) throw new Error('Component does not exists.');
-		else if (this.empty(this.data[name].html)) throw new Error('The component does not have html.');
+		if (this.empty(name)) throw new Error('Component without name.');
+		else if (this.empty(html)) throw new Error('Component \'' + name + '\' without html.');
+		else if (this.empty(this.data[name])) throw new Error('Component \'' + name + '\' does not exists.');
+		else if (this.empty(this.data[name].html)) throw new Error('The component \'' + name + '\' does not have html.');
 		else {
 			this.data[name] = {};
 			this.data[name].html = html;
