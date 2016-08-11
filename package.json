@@ -1,6 +1,6 @@
 {
   "name": "nexo",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Lightweight components for javascript",
   "main": "nexo.js",
   "scripts": {
