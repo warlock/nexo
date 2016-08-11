@@ -70,8 +70,6 @@ var n = {
 	set : function (name, html, action) {
 		if (this.empty(name)) throw new Error('Component without name.');
 		else if (this.empty(html)) throw new Error('Component \'' + name + '\' without html.');
-		else if (this.data[name] === 'undefined') throw new Error('Component \'' + name + '\' does not exists.');
-		else if (this.data[name].html === 'undefined') throw new Error('The component \'' + name + '\' does not have html.');
 		else {
 			this.data[name] = {};
 			this.data[name].html = html;
@@ -85,6 +83,8 @@ var n = {
 	render : function (name, id, attr) {
 		if (this.empty(name)) throw new Error('Render without name');
 		else if (this.empty(id)) throw new Error('Render without objective');
+		else if (this.empty(this.data[name])) throw new Error('Component \'' + name + '\' does not exists.');
+		else if (this.empty(this.data[name].html)) throw new Error('The component \'' + name + '\' does not have html.');
 		else {
 			document.getElementById(id).innerHTML = this.data[name].html(this, attr);
 			if (!this.empty(attr) && !this.empty(attr.name) && attr.name === 'model') this.relations[id] = { comp : name, model : attr.model };
