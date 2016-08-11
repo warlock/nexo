@@ -40,8 +40,8 @@ var n = {
 			return this.store[key].length;
 		},
 		render : function (key) {
-			for(k in n.relations){
-				if(n.relations[k].model ==  key) n.render(n.relations[k].comp, k, n.model.get(key))
+			for(var k in n.relations){
+				if(n.relations[k].model ==  key) n.render(n.relations[k].comp, k, n.model.get(key));
 			}
 		}
 	},
@@ -49,11 +49,11 @@ var n = {
 		return val === undefined || val === null || val === '';
 	},
 	id : function (id) {
-		if (this.empty(id)) throw 'Error: id without value';
+		if (this.empty(id)) throw new Error('Id without value');
 		else return document.getElementById(id);
 	},
 	class : function (id) {
-		if (this.empty(id)) throw 'Error: class without value';
+		if (this.empty(id)) throw new Error('Class without value');
 		else return document.getElementsByClassName(id);
 	},
 	run : function () {
@@ -61,15 +61,17 @@ var n = {
 		this.stack = [];
 	},
 	get : function (name, attr) {
-		if (this.empty(name)) throw 'Error: get without name';
+		if (this.empty(name)) throw new Error('Get without name');
 		else {
 			if (typeof this.data[name].action === 'function') this.stack.push({ action : this.data[name].action, attr : [this, attr]});
 			return this.data[name].html(this, attr);
 		}
 	},
 	set : function (name, html, action) {
-		if (this.empty(name)) throw 'Error: set component without name';
-		else if (this.empty(html)) throw 'Error: set component without html';
+		if (this.empty(name)) throw new Error('Set component without name.');
+		else if (this.empty(html)) throw new Error('Set component without html.');
+		else if (this.empty(this.data[name])) throw new Error('Component does not exists.');
+		else if (this.empty(this.data[name].html)) throw new Error('The component does not have html.');
 		else {
 			this.data[name] = {};
 			this.data[name].html = html;
@@ -77,12 +79,12 @@ var n = {
 		}
 	},
 	destroy : function (name) {
-		if (this.empty(name)) throw 'Error: destroy without objective';
+		if (this.empty(name)) throw new Error('Destroy without objective');
 		else document.getElementById(name).innerHTML = "";
 	},
 	render : function (name, id, attr) {
-		if (this.empty(name)) throw 'Error: render without name';
-		else if (this.empty(id)) throw 'Error: render without objective';
+		if (this.empty(name)) throw new Error('Render without name');
+		else if (this.empty(id)) throw new Error('Render without objective');
 		else {
 			document.getElementById(id).innerHTML = this.data[name].html(this, attr);
 			if (!this.empty(attr) && !this.empty(attr.name) && attr.name === 'model') this.relations[id] = { comp : name, model : attr.model };
@@ -92,9 +94,9 @@ var n = {
 		}
 	},
 	on : function (obj, eventHandler, callback) {
-		if (sb.empty(obj)) throw 'Error: event without objective';
-		else if (sb.empty(eventHandler)) throw 'Error: event without event handler';
-		else if (sb.empty(callback)) throw 'Error: event without function';
+		if (sb.empty(obj)) throw new Error('Event without objective');
+		else if (sb.empty(eventHandler)) throw new Error('Event without event handler');
+		else if (sb.empty(callback)) throw new Error('Event without function');
 		else {
 			obj.addEventListener(eventHandler, function (event) {
 				callback(event);
