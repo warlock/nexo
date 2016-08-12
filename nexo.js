@@ -67,6 +67,19 @@ var n = {
 				this.render(model);
 			}
 		},
+		index : function (model, index) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+			if (n.empty(this.store[model][index])) throw new Error('Model \'' + model + '\' not have index: ' + index);
+			else return this.store[model][index];
+		},
+		first : function (model) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+			else return this.store[model][0];
+		},
+		last : function (model) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+			else return this.store[model][a.length-1];
+		},
 		find : function (model, obj) {
 			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
 			else if (n.empty(obj) && typeof obj !== 'object') throw new Error('Find in \'' + model + '\' need a object.');
@@ -76,13 +89,13 @@ var n = {
 					var chck = true;
 					keys.forEach(function (k) {
 						if(e[k] !== obj[k]) chck = false;
-					})
+					});
 					return chck;
-				})
+				});
 				data.name = 'model';
 				data.model = model;
 				for(var k in n.relations){
-					if(n.relations[k].model ==  model) n.render(n.relations[k].comp, k, data)
+					if(n.relations[k].model ==  model) n.render(n.relations[k].comp, k, data);
 				}
 			}
 		},
@@ -99,13 +112,13 @@ var n = {
 						} else {
 							if(e[k] !== obj[k]) chck = false;
 						}
-					})
+					});
 					return chck;
-				})
+				});
 				data.name = 'model';
 				data.model = model;
 				for(var k in n.relations){
-					if(n.relations[k].model ==  model) n.render(n.relations[k].comp, k, data)
+					if(n.relations[k].model ==  model) n.render(n.relations[k].comp, k, data);
 				}
 			}
 		},
