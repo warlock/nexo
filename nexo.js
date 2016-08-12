@@ -4,72 +4,91 @@ var n = {
 	relations : {},
 	model : {
 		store : {},
-		set : function (key, data) {
-			if (data instanceof Array) this.store[key] = data;
-			else this.store[key] = [data];
-			this.store[key].name = 'model';
-			this.store[key].model = key;
-			this.render(key);
+		set : function (model, data) {
+			if (data instanceof Array) this.store[model] = data;
+			else this.store[model] = [data];
+			this.store[model].name = 'model';
+			this.store[model].model = model;
+			this.render(model);
 		},
-		get : function (key) {
-			if (n.empty(this.store[key])) throw new Error('Model \'' + key + '\' does not exists.');
-			else return this.store[key];
+		get : function (model) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+			else return this.store[model];
 		},
-		push : function (key, data) {
-			if (n.empty(this.store[key])) throw new Error('Model \'' + key + '\' does not exists.');
+		push : function (model, data) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
 			else {
-				this.store[key].push(data);
-				this.render(key);
+				this.store[model].push(data);
+				this.render(model);
 			}
 		},
-		pop : function (key) {
-			if (n.empty(this.store[key])) throw new Error('Model \'' + key + '\' does not exists.');
+		pop : function (model) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
 			else {
-				var ret = this.store[key].pop();
-				this.render(key);
+				var ret = this.store[model].pop();
+				this.render(model);
 				return ret;
 			}
 		},
-		shift : function (key) {
-			if (n.empty(this.store[key])) throw new Error('Model \'' + key + '\' does not exists.');
+		shift : function (model) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
 			else {
-				var ret = this.store[key].shift();
-				this.render(key);
+				var ret = this.store[model].shift();
+				this.render(model);
 				return ret;
 			}
 		},
-		reverse : function (key) {
-			if (n.empty(this.store[key])) throw new Error('Model \'' + key + '\' does not exists.');
+		reverse : function (model) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
 			else {
-				var ret = this.store[key].reverse();
-				this.render(key);
+				var ret = this.store[model].reverse();
+				this.render(model);
 				return ret;
 			}
 		},
-		size : function (key) {
-			if (n.empty(this.store[key])) throw new Error('Model \'' + key + '\' does not exists.');
-			else return this.store[key].length;
+		size : function (model) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+			else return this.store[model].length;
 		},
-		length : function (key) {
-			if (n.empty(this.store[key])) throw new Error('Model \'' + key + '\' does not exists.');
-			else return this.store[key].length;
+		length : function (model) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+			else return this.store[model].length;
 		},
-		delete : function (key) {
-			if (n.empty(this.store[key])) throw new Error('Model \'' + key + '\' does not exists.');
-			else delete this.store[key];
+		delete : function (model) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+			else delete this.store[model];
 		},
-		clear : function (key) {
-			if (n.empty(this.store[key])) throw new Error('Model \'' + key + '\' does not exists.');
+		clear : function (model) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
 			else {
-				this.store[key] = [];
-				this.store[key].name = 'model';
-				this.store[key].model = key;
-				this.render(key);
+				this.store[model] = [];
+				this.store[model].name = 'model';
+				this.store[model].model = model;
+				this.render(model);
 			}
 		},
-		render : function (key) {
+		find : function (model, obj) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+			else if (n.empty(obj) && typeof obj !== 'object') throw new Error('Find in \'' + model + '\' need a object.');
+			else {
+				var keys = Object.keys(obj);
+				var data =  this.store[model].filter(function (e) {
+					var chck = true;
+					keys.forEach(function (k) {
+						if(e[k] !== obj[k]) chck = false;
+					})
+					return chck;
+				})
+				data.name = 'model';
+				data.model = model;
+				for(var k in n.relations){
+					if(n.relations[k].model ==  model) n.render(n.relations[k].comp, k, data)
+				}
+			}
+		},
+		render : function (model) {
 			for(var k in n.relations){
-				if(n.relations[k].model ==  key) n.render(n.relations[k].comp, k, n.model.get(key));
+				if(n.relations[k].model ==  model) n.render(n.relations[k].comp, k, n.model.get(model));
 			}
 		}
 	},

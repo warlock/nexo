@@ -11,8 +11,8 @@ n.set('hola', function (comp, attr) {
 })
 
 n.ready(function () {
-  n.model.set('clients', { name : 'eudald' })
-  n.model.push('clients', { name : 'josep' })
+  n.model.set('clients', { name : 'eudald', edad : 18, dif : 2 })
+  n.model.push('clients', { name : 'josep', edad : 18, dif : 1 })
   n.render('hola', 'main', n.model.get('clients'))
 })
 </script>
