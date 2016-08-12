@@ -122,9 +122,9 @@ var n = {
 		}
 	},
 	on : function (obj, eventHandler, callback) {
-		if (sb.empty(obj)) throw new Error('Event without objective');
-		else if (sb.empty(eventHandler)) throw new Error('Event without event handler');
-		else if (sb.empty(callback)) throw new Error('Event without function');
+		if (n.empty(obj)) throw new Error('Event without objective');
+		else if (n.empty(eventHandler)) throw new Error('Event without event handler');
+		else if (n.empty(callback)) throw new Error('Event without function');
 		else {
 			obj.addEventListener(eventHandler, function (event) {
 				callback(event);

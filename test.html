@@ -1,0 +1,24 @@
+<html>
+<head>
+<script src="nexo.js"></script>
+<script>
+n.set('hola', function (comp, attr) {
+  var text = ''
+  attr.forEach((e) => {
+    text += e.name + "<br>"
+  })
+  return text
+})
+
+n.ready(function () {
+  n.model.set('clients', { name : 'eudald' })
+  n.model.push('clients', { name : 'josep' })
+  n.render('hola', 'main', n.model.get('clients'))
+})
+</script>
+</head>
+<body>
+  <div id="main"></div>
+  <div id="main2"></div>
+</body>
+</html>
