@@ -78,7 +78,7 @@ var n = {
 		},
 		last : function (model) {
 			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-			else return this.store[model][a.length-1];
+			else return this.store[model][this.store[model].length-1];
 		},
 		find : function (model, obj) {
 			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
