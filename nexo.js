@@ -86,6 +86,29 @@ var n = {
 				}
 			}
 		},
+		filter : function (model, obj) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+			else if (n.empty(obj) && typeof obj !== 'object') throw new Error('Find in \'' + model + '\' need a object.');
+			else {
+				var keys = Object.keys(obj);
+				var data =  this.store[model].filter(function (e) {
+					var chck = true;
+					keys.forEach(function (k) {
+						if (typeof e[k] === 'string') {
+							if(e[k].indexOf(obj[k]) < 0) chck = false;
+						} else {
+							if(e[k] !== obj[k]) chck = false;
+						}
+					})
+					return chck;
+				})
+				data.name = 'model';
+				data.model = model;
+				for(var k in n.relations){
+					if(n.relations[k].model ==  model) n.render(n.relations[k].comp, k, data)
+				}
+			}
+		},
 		render : function (model) {
 			for(var k in n.relations){
 				if(n.relations[k].model ==  model) n.render(n.relations[k].comp, k, n.model.get(model));
