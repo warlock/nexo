@@ -58,6 +58,31 @@ var n = {
 			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
 			else delete this.store[model];
 		},
+		remove : function (model, data) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+			else if (n.empty(data)) throw new Error('Remove in \'' + model + '\' need a object or key.');
+			else if (typeof data === "number" || data instanceof Number) {
+				this.store[model].splice(data, 1);
+				this.render(model);
+			} else if (typeof data === 'object') {
+				var keys = Object.keys(data);
+				var data =  this.store[model].filter(function (e) {
+					var chck = true;
+					keys.forEach(function (k) {
+						if (typeof e[k] === 'string') {
+							if(e[k].indexOf(data[k]) >= 0) chck = false;
+						} else {
+							if(e[k] === data[k]) chck = false;
+						}
+					});
+					return chck;
+				});
+				this.store[model] = data
+				this.store[model].name = 'model';
+				this.store[model].model = model;
+				this.render(model);
+			}
+		},
 		clear : function (model) {
 			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
 			else {
@@ -69,7 +94,7 @@ var n = {
 		},
 		index : function (model, index) {
 			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-			if (n.empty(this.store[model][index])) throw new Error('Model \'' + model + '\' not have index: ' + index);
+			else if (n.empty(this.store[model][index])) throw new Error('Model \'' + model + '\' not have index: ' + index);
 			else return this.store[model][index];
 		},
 		first : function (model) {
