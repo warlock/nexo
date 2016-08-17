@@ -66,7 +66,7 @@ var n = {
 				this.render(model);
 			} else if (typeof data === 'object') {
 				var keys = Object.keys(data);
-				var data =  this.store[model].filter(function (e) {
+				var res =  this.store[model].filter(function (e) {
 					var chck = true;
 					keys.forEach(function (k) {
 						if (typeof e[k] === 'string') {
@@ -77,7 +77,7 @@ var n = {
 					});
 					return chck;
 				});
-				this.store[model] = data
+				this.store[model] = res;
 				this.store[model].name = 'model';
 				this.store[model].model = model;
 				this.render(model);
