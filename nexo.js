@@ -61,7 +61,7 @@ var n = {
 		remove : function (model, data) {
 			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
 			else if (n.empty(data)) throw new Error('Remove in \'' + model + '\' need a object or key.');
-			else if (typeof data === "number" || data instanceof Number) {
+			else if (typeof data === 'number' || data instanceof Number) {
 				this.store[model].splice(data, 1);
 				this.render(model);
 			} else if (typeof data === 'object') {
