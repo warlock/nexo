@@ -50,6 +50,10 @@ var n = {
 			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
 			else return this.store[model].length;
 		},
+		keys : function (model) {
+			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+			else return Object.keys(this.store[model][0]);
+		},
 		length : function (model) {
 			if (n.empty(this.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
 			else return this.store[model].length;
