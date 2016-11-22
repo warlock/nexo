@@ -210,9 +210,18 @@ var n = {
 		else if (n.empty(eventHandler)) throw new Error('Event without event handler');
 		else if (n.empty(callback)) throw new Error('Event without function');
 		else {
-			obj.addEventListener(eventHandler, function (event) {
-				callback(event);
-			});
+			if (Array.isArray(obj)) {
+				console.log(obj)
+				for (var i = 0; i < obj.length; i++) {
+					obj[i].addEventListener(eventHandler, function (event) {
+						callback(event);
+					});
+				}
+			} else {
+				obj.addEventListener(eventHandler, function (event) {
+					callback(event);
+				});
+			}
 		}
 	},
 	ready : function (callback) {
