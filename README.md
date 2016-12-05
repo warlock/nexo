@@ -2,6 +2,7 @@
 >A lightweight framework for creating web components in **Javascript**
 
 https://www.npmjs.com/package/nexo
+https://github.com/warlock/nexo
 
 ###Documentation
 https://warlock.gitbooks.io/nexo/content
