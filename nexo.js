@@ -195,9 +195,17 @@ var n = {
     if (n.empty(comp)) throw new Error('Not component imported width \'load\'.');
     else if (n.empty(comp.name) || n.empty(comp.html)) throw new Error('Please set \'html\' and \'name\' values.');
     else {
-      n.data[comp.name] = {};
-      n.data[comp.name].html = comp.html;
-      if (typeof comp.action === 'function') n.data[comp.name].action = comp.action;
+      if (typeof comp === "object" && comp instanceof Array) {
+        comp.forEach(function (el) {
+          n.data[el.name] = {};
+          n.data[el.name].html = el.html;
+          if (typeof el.action === 'function') n.data[el.name].action = el.action;
+        });
+      } else {
+        n.data[comp.name] = {};
+        n.data[comp.name].html = comp.html;
+        if (typeof comp.action === 'function') n.data[comp.name].action = comp.action;
+      }
     }
   },
   "destroy": function (name) {
