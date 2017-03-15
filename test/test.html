@@ -4,20 +4,25 @@
 </head>
 <body>
   <div id="main"></div>
-  <div id="main2"></div>
+  <div id="main2">clickme</div>
   <script>
-  n.set('hola', function (comp, attr) {
+  n.set('clientList', function (n, attr) {
     var text = ''
     attr.forEach((e) => {
       text += e.name + "<br>"
     })
     return text
+  }, function (n, attr) {
+    console.log('Rendering clientList!')
+    n.on(n.id('main'), 'click', function () {
+      console.log("buuu")
+    })
   })
 
   n.ready(function () {
     n.model.set('clients', { name : 'eudald', edad : 18, dif : 2 })
+    n.render('clientList', 'main', n.model.get('clients'))
     n.model.push('clients', { name : 'josep', edad : 18, dif : 1 })
-    n.render('hola', 'main', n.model.get('clients'))
     n.on([n.id('main'), n.id('main2')], 'click', function () {
       console.log('weee')
     })
