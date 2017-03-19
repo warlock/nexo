@@ -4,20 +4,20 @@
 https://www.npmjs.com/package/nexo
 https://github.com/warlock/nexo
 
-###Documentation
+### Documentation
 https://warlock.gitbooks.io/nexo/content
 
-###Install
+### Install
 ```sh
 npm install nexo
 ```
 
-###Import module for Node.js:
+### Import module for Node.js:
 ```javascript
 var n = require("nexo");
 ```
 
-###Browser import:
+### Browser import:
 ```html
 <script src="nexo/nexo.js"></script>
 <script>
@@ -27,7 +27,7 @@ n.ready(function () {
 </script>
 ```
 
-###Demo:
+### Demo:
 ```javascript
 n.set('button', function (comp, data) {
     return '<b id="click_now">Clickme ' + data + '!</b>';
