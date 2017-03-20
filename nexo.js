@@ -138,7 +138,7 @@ var n = {
           var chck = true;
           keys.forEach(function (k) {
             if (typeof e[k] === 'string') {
-              if(e[k].indexOf(obj[k]) < 0) chck = false;
+              if(e[k].toLowerCase().indexOf(obj[k].toLowerCase()) < 0) chck = false;
             } else {
               if(e[k] !== obj[k]) chck = false;
             }
