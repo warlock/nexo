@@ -2,6 +2,7 @@ var n = {
   "data": {},
   "stack": [],
   "relations": {},
+  "events": {},
   "model": {
     "store": {},
     "set": function (model, data) {
@@ -236,17 +237,28 @@ var n = {
       n.run();
     }
   },
+  "emit": function (ev, data) {
+    if (ev === undefined || ev === null || ev === "") throw new Error('No event selected.');
+    else if (ev instanceof Array) {
+      for (var i = 0; i < ev.length; i++) {
+        if (typeof n.events[ev[i]] === 'function') n.events[ev[i]](data);
+      }
+    } else if (typeof n.events[ev] === 'function') n.events[ev](data);
+  },
   "on": function (obj, eventHandler, callback) {
     if (n.empty(obj)) throw new Error('Event without objective');
-    else if (n.empty(eventHandler)) throw new Error('Event without event handler');
-    else if (n.empty(callback)) throw new Error('Event without function');
     else {
-      if (Array.isArray(obj)) {
-        for (var i = 0; i < obj.length; i++) {
-          obj[i].addEventListener(eventHandler, callback);
-        }
+      if (typeof obj === "string" || obj instanceof String) {
+        if (n.empty(eventHandler) && typeof eventHandler === 'function') throw new Error('Event needs a function');
+        else n.events[obj] = eventHandler;
       } else {
-        obj.addEventListener(eventHandler,callback);
+        if (n.empty(eventHandler)) throw new Error('Event without event handler');
+        else if (n.empty(callback)) throw new Error('Event without function');
+        else if (Array.isArray(obj)) {
+          for (var i = 0; i < obj.length; i++) {
+            obj[i].addEventListener(eventHandler, callback);
+          }
+        } else obj.addEventListener(eventHandler,callback);
       }
     }
   },

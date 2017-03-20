@@ -5,21 +5,35 @@
 <body>
   <div id="main"></div>
   <div id="main2">clickme</div>
+  <div id="main3"></div>
   <script>
-  n.set('clientList', function (n, attr) {
+  n.on('eventTest', data => {
+    console.log("Recibed: " + data)
+  })
+  
+  n.set('clientList', (n, attr) => {
     var text = ''
     attr.forEach((e) => {
       text += e.name + "<br>"
     })
     return text
-  }, function (n, attr) {
+  },
+  (n, attr) => {
     console.log('Rendering clientList!')
     n.on(n.id('main'), 'click', function () {
       console.log("buuu")
+      n.emit('eventTest', 'from clientList')
+      n.render('paintTest', 'main3', { date : new Date(), name: "PERSON" })
     })
   })
 
-  n.ready(function () {
+  n.set('namePaint', (n, name) => `HELLO ${name}!`)
+
+  n.set('paintTest', (n, data) => `
+    <strong>Test ${data.date} : ${n.get('namePaint', data.name)}</strong>
+  `)
+
+  n.ready(() => {
     n.model.set('clients', { name : 'eudald', edad : 18, dif : 2 })
     n.render('clientList', 'main', n.model.get('clients'))
     n.model.push('clients', { name : 'josep', edad : 18, dif : 1 })
