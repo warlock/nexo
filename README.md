@@ -5,7 +5,7 @@ https://www.npmjs.com/package/nexo
 https://github.com/warlock/nexo
 
 ### Documentation
-https://warlock.gitbooks.io/nexo/content
+https://warlock.gitbooks.io/nexo
 
 ### Install
 ```sh
@@ -14,32 +14,34 @@ npm install nexo
 
 ### Import module for Node.js:
 ```javascript
-var n = require("nexo");
+var n = require("nexo")
 ```
 
 ### Browser import:
 ```html
 <script src="nexo/nexo.js"></script>
 <script>
-n.ready(function () {
-  console.log("DOM loaded")
+n.ready(() => {
+  console.log("Web page loaded!")
 })
 </script>
 ```
 
 ### Demo:
 ```javascript
-n.set('button', function (comp, data) {
-    return '<b id="click_now">Clickme ' + data + '!</b>';
-}, function (comp, data) {
+n.set('button',
+  (comp, data) => `
+  <b id="click_now">Clickme ${data}!</b>
+  `,
+  (comp, data) => {
     n.on(n.id('click_now'), 'click', function () {
       console.log("Hi!");
-    });
-});
+    })
+})
 
-n.ready(function () {
+n.ready(() => {
 	n.render('button', 'main_div', 'Now');
-});
+})
 ```
 
 ## License
