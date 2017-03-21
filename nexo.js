@@ -110,25 +110,6 @@ var n = {
       if (n.empty(n.model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
       else return n.model.store[model][n.model.store[model].length-1];
     },
-    "find": function (model, obj) {
-      if (n.empty(n.model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-      else if (n.empty(obj) && typeof obj !== 'object') throw new Error('Find in \'' + model + '\' need a object.');
-      else {
-        var keys = Object.keys(obj);
-        var data =  n.model.store[model].filter(function (e) {
-          var chck = true;
-          keys.forEach(function (k) {
-            if(e[k] !== obj[k]) chck = false;
-          });
-          return chck;
-        });
-        data.name = 'model';
-        data.model = model;
-        for(var k in n.relations) {
-          if(n.relations[k].model ===  model) n.render(n.relations[k].comp, k, data);
-        }
-      }
-    },
     "filter": function (model, obj) {
       if (n.empty(n.model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
       else if (n.empty(obj) && typeof obj !== 'object') throw new Error('Find in \'' + model + '\' need a object.');
