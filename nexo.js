@@ -230,8 +230,18 @@ var n = {
     if (n.empty(obj)) throw new Error('Event without objective');
     else {
       if (typeof obj === "string" || obj instanceof String) {
-        if (n.empty(eventHandler) && typeof eventHandler === 'function') throw new Error('Event needs a function');
-        else n.events[obj] = eventHandler;
+        if (obj[0] === '#') {
+          var nid = document.getElementById(obj.slice(1,obj.length));
+          nid.addEventListener(eventHandler, callback);
+        } else if (obj[0] === '.') {
+          var ncl = document.getElementsByClassName(obj.slice(1,obj.length));
+          for (var ic = 0; ic < ncl.length; ic++) {
+            ncl[ic].addEventListener(eventHandler, callback);
+          }
+        } else {
+          if (n.empty(eventHandler) || typeof eventHandler !== 'function') throw new Error('Event needs a function');
+          else n.events[obj] = eventHandler;
+        }
       } else {
         if (n.empty(eventHandler)) throw new Error('Event without event handler');
         else if (n.empty(callback)) throw new Error('Event without function');
