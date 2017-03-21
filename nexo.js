@@ -13,9 +13,10 @@ var n = {
         parray.forEach(function (pstr) {
           if (!n.empty(pstr)) {
             var parr = pstr.split('=');
-            if (!n.empty(parr[0]) && !n.empty(parr[1])) {
+            if (!n.empty(parr[0]) && !n.empty(parr[0].trim()) && !n.empty(parr[1])) {
               parr[1] = parr[1].trim();
-              params[parr[0]] = decodeURIComponent(parr[1]);
+              parr[1] = decodeURIComponent(parr[1]).trim();
+              if (!n.empty(parr[1])) params[parr[0].trim()] = parr[1];
             }
           }
         });
