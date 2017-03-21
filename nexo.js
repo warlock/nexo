@@ -159,9 +159,9 @@ var n = {
     else {
       if (typeof n.data[name].action === 'function') n.stack.push({
         "action": n.data[name].action,
-        "attr": [this, attr]
+        "attr": [n, attr]
       });
-      return n.data[name].html(this, attr);
+      return n.data[name].html(n, attr);
     }
   },
   "set": function (name, html, action) {
@@ -205,7 +205,7 @@ var n = {
     else if (n.empty(n.data[name])) throw new Error('Component \'' + name + '\' does not exists.');
     else if (n.empty(n.data[name].html)) throw new Error('The component \'' + name + '\' does not have html.');
     else {
-      document.getElementById(id).innerHTML = n.data[name].html(this, attr);
+      document.getElementById(id).innerHTML = n.data[name].html(n, attr);
       if (!n.empty(attr) && !n.empty(attr.name) && attr.name === 'model') n.relations[id] = {
         "comp": name,
         "model": attr.model
@@ -213,7 +213,7 @@ var n = {
       else if (!n.empty(n.relations[id])) delete n.relations[id];
       if (typeof n.data[name].action === 'function') n.stack.push({
         "action": n.data[name].action,
-        "attr": [this, attr]
+        "attr": [n, attr]
       });
       n.run();
     }
