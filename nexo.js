@@ -3,6 +3,26 @@ var n = {
   "stack": [],
   "relations": {},
   "events": {},
+  "getParams": function () {
+    var paramstr = window.location.search;
+    if (!n.empty(paramstr)) {
+      paramstr = paramstr.substring(1);
+      var parray = paramstr.split('&');
+      if (parray.length > 0) {
+        var params = {};
+        parray.forEach(function (pstr) {
+          if (!n.empty(pstr)) {
+            var parr = pstr.split('=');
+            if (!n.empty(parr[0]) && !n.empty(parr[1])) {
+              parr[1] = parr[1].trim();
+              params[parr[0]] = decodeURIComponent(parr[1]);
+            }
+          }
+        });
+        return params;
+      } else return {};
+    } else return {};
+  },
   "model": {
     "store": {},
     "set": function (model, data) {
@@ -257,5 +277,7 @@ var n = {
     document.addEventListener("DOMContentLoaded", callback);
   }
 };
+
+n.params = n.getParams();
 
 if (typeof process === 'object') module.exports = n;
