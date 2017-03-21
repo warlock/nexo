@@ -219,7 +219,7 @@ var n = {
     }
   },
   "emit": function (ev, data) {
-    if (ev === undefined || ev === null || ev === "") throw new Error('No event selected.');
+    if (n.empty(ev)) throw new Error('No event selected.');
     else if (ev instanceof Array) {
       for (var i = 0; i < ev.length; i++) {
         if (typeof n.events[ev[i]] === 'function') n.events[ev[i]](data);
