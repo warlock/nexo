@@ -178,7 +178,7 @@ var n = {
   "get": function (name, attr) {
     if (n.empty(name)) throw new Error('Get without name');
     else {
-      if (typeof n.data[name].action === 'function') n.stack.push({
+      if (!n.empty(n.data[name].action) && typeof n.data[name].action === 'function') n.stack.push({
         "action": n.data[name].action,
         "attr": [n, attr]
       });
@@ -191,7 +191,7 @@ var n = {
     else {
       n.data[name] = {};
       n.data[name].html = html;
-      if (typeof action === 'function') n.data[name].action = action;
+      if (!n.empty(action) && typeof action === 'function') n.data[name].action = action;
     }
   },
   "load": function (comp) {
@@ -203,7 +203,7 @@ var n = {
           else {
             n.data[el.name] = {};
             n.data[el.name].html = el.html;
-            if (typeof el.action === 'function') n.data[el.name].action = el.action;
+            if (!n.empty(el.action) && typeof el.action === 'function') n.data[el.name].action = el.action;
           }
         });
       } else {
@@ -211,7 +211,7 @@ var n = {
         else {
           n.data[comp.name] = {};
           n.data[comp.name].html = comp.html;
-          if (typeof comp.action === 'function') n.data[comp.name].action = comp.action;
+          if (!n.empty(comp.action) && typeof comp.action === 'function') n.data[comp.name].action = comp.action;
         }
       }
     }
@@ -232,7 +232,7 @@ var n = {
         "model": attr.model
       };
       else if (!n.empty(n.relations[id])) delete n.relations[id];
-      if (typeof n.data[name].action === 'function') n.stack.push({
+      if (!n.empty(n.data[name].action) && typeof n.data[name].action === 'function') n.stack.push({
         "action": n.data[name].action,
         "attr": [n, attr]
       });
@@ -243,9 +243,9 @@ var n = {
     if (n.empty(ev)) throw new Error('No event selected.');
     else if (ev instanceof Array) {
       for (var i = 0; i < ev.length; i++) {
-        if (typeof n.events[ev[i]] === 'function') n.events[ev[i]](data);
+        if (!n.empty(n.events[ev[i]]) && typeof n.events[ev[i]] === 'function') n.events[ev[i]](data);
       }
-    } else if (typeof n.events[ev] === 'function') n.events[ev](data);
+    } else if (!n.empty(n.events[ev]) && typeof n.events[ev] === 'function') n.events[ev](data);
   },
   "on": function (obj, eventHandler, callback) {
     if (n.empty(obj)) throw new Error('Event without objective');
