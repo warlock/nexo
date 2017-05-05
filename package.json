@@ -1,7 +1,7 @@
 {
   "name": "nexo",
-  "version": "0.0.35",
-  "description": "Lightweight components for javascript",
+  "version": "0.0.36",
+  "description": "Lightweight Javascript Web Components for Frontend",
   "main": "nexo.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,10 +11,10 @@
     "url": "git+https://github.com/warlock/nexo.git"
   },
   "keywords": ["frontend","client-side", "browser", "framework", "angular", "component", "components", "framework","gui","form","website","model","website"],
-  "author": "",
+  "author": "Josep Subils Rigau",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/warlock/nexo/issues"
   },
-  "homepage": "https://github.com/warlock/nexo#readme"
+  "homepage": "https://warlock.gitbooks.io/nexo/"
 }

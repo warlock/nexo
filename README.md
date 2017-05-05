@@ -5,7 +5,18 @@ https://www.npmjs.com/package/nexo
 https://github.com/warlock/nexo
 
 ### Documentation
-https://warlock.gitbooks.io/nexo
+[Oficial gitbook](https://warlock.gitbooks.io/nexo)
+[Basic tutorial for Webpack](https://warlock.gitbooks.io/nexo/component-loader.html)
+[Demo with Express and Webpack](https://github.com/warlock/nexoDemo)
+
+### Utils
+* Render javascript web components with events
+* Reactive model system
+* DOM event handler
+* Internal Event handler
+* Cookies set and get
+* Easy for work direcly from browser or build a bundle
+
 
 ### Install
 ```sh
@@ -20,27 +31,24 @@ var n = require("nexo")
 ### Browser import:
 ```html
 <script src="nexo/nexo.js"></script>
-<script>
-n.ready(() => {
-  console.log("Web page loaded!")
-})
-</script>
 ```
 
-### Demo:
+### Demo for version 0.0.36:
 ```javascript
-n.set('button',
-  (comp, data) => `
+n.set({
+  name : 'button',
+  html : (n, data) => `
   <b id="click_now">Clickme ${data}!</b>
   `,
-  (comp, data) => {
-    n.on(n.id('click_now'), 'click', function () {
-      console.log("Hi!");
+  action : (n, data) => {
+    n.on('#click_now', 'click', () => {
+      console.log(`Hi! ${data}`)
     })
+  }
 })
 
 n.ready(() => {
-	n.render('button', 'main_div', 'Now');
+	n.render('button', 'main_div', 'Now')
 })
 ```
 

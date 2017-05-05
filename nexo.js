@@ -3,6 +3,22 @@ var n = {
   "stack": [],
   "relations": {},
   "events": {},
+  "cookies": {
+    "set": function (key, value, exdays) {
+      var d = new Date();
+      d.setTime(d.getTime() + (exdays*24*60*60*1000));
+      var expires = "expires="+ d.toUTCString();
+      document.cookie = key + "=" + value + ";" + expires + ";path=/";
+    },
+    "get": function (key) {
+      var value = "";
+      document.cookie.split('; ').forEach(function (e) {
+        var x = e.split('=');
+        if (x[0] === key) value = x[1];
+      });
+      return value;
+    }
+  },
   "getParams": function () {
     var paramstr = window.location.search;
     if (!n.empty(paramstr)) {
@@ -182,12 +198,24 @@ var n = {
         "action": n.data[name].action,
         "attr": [n, attr]
       });
+      if (!n.empty(n.data[name].load) && typeof n.data[name].load === 'function') n.data[name].load();
       return n.data[name].html(n, attr);
     }
   },
   "set": function (name, html, action) {
     if (n.empty(name)) throw new Error('Component without name.');
-    else if (n.empty(html)) throw new Error('Component \'' + name + '\' without html.');
+    else if(typeof name === 'object') {
+      var comp = name;
+      if (n.empty(comp.name)) throw new Error('Component without name.');
+      else if (n.empty(comp.html)) throw new Error('Component \'' + name + '\' without html.');
+      else {
+        n.data[comp.name] = {};
+        n.data[comp.name].html = comp.html;
+        if (!n.empty(comp.action) && typeof comp.action === 'function') n.data[comp.name].action = comp.action;
+        if (!n.empty(comp.ready) && typeof comp.ready === 'function') n.data[comp.name].action = comp.ready;
+        if (!n.empty(comp.load) && typeof comp.load === 'function') n.data[comp.name].load = comp.load;
+      }
+    } else if (n.empty(html)) throw new Error('Component \'' + name + '\' without html.');
     else {
       n.data[name] = {};
       n.data[name].html = html;
@@ -226,6 +254,7 @@ var n = {
     else if (n.empty(n.data[name])) throw new Error('Component \'' + name + '\' does not exists.');
     else if (n.empty(n.data[name].html)) throw new Error('The component \'' + name + '\' does not have html.');
     else {
+      if (!n.empty(n.data[name].load) && typeof n.data[name].load === 'function') n.data[name].load();
       document.getElementById(id).innerHTML = n.data[name].html(n, attr);
       if (!n.empty(attr) && !n.empty(attr.name) && attr.name === 'model') n.relations[id] = {
         "comp": name,

@@ -2,3 +2,5 @@ npm-debug.log
 test/
 .DS_Store
 node_modules
+.eslint.js
+jsconfig.json
