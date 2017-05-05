@@ -37,9 +37,7 @@ var n = require("nexo")
 ```javascript
 n.set({
   name : 'button',
-  html : (n, data) => `
-  <b id="click_now">Clickme ${data}!</b>
-  `,
+  html : (n, data) => `<b id="click_now">Clickme ${data}!</b>`,
   action : (n, data) => {
     n.on('#click_now', 'click', () => {
       console.log(`Hi! ${data}`)
@@ -48,7 +46,7 @@ n.set({
 })
 
 n.ready(() => {
-	n.render('button', 'main_div', 'Now')
+  n.render('button', 'main_div', 'Now')
 })
 ```
 
