@@ -1,13 +1,13 @@
 # nexo
->A lightweight framework for creating web components in **Javascript**
+>Lightweight **Javascript** Web Components for Frontend
 
-https://www.npmjs.com/package/nexo
-https://github.com/warlock/nexo
+* https://www.npmjs.com/package/nexo
+* https://github.com/warlock/nexo
 
 ### Documentation
-[Oficial gitbook](https://warlock.gitbooks.io/nexo)
-[Basic tutorial for Webpack](https://warlock.gitbooks.io/nexo/component-loader.html)
-[Demo with Express and Webpack](https://github.com/warlock/nexoDemo)
+* [Oficial gitbook](https://warlock.gitbooks.io/nexo)
+* [Basic tutorial for Webpack](https://warlock.gitbooks.io/nexo/component-loader.html)
+* [Demo with Express and Webpack](https://github.com/warlock/nexoDemo)
 
 ### Utils
 * Render javascript web components with events
@@ -25,7 +25,7 @@ npm install nexo
 
 ### Import module for Node.js:
 ```javascript
-var n = require("nexo")
+const n = require("nexo")
 ```
 
 ### Browser import:
