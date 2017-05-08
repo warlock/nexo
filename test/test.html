@@ -6,26 +6,24 @@
   <div id="main"></div>
   <div class="main2">clickme</div>
   <div id="main3"></div>
+  <div id="main4"></div>
   <script>
 
 n.set({
-  "name" : "client",
-  "html" : (n, client) => `<div id="client-${client.name}">${client.name} - ${client.age}<br></div>`
+  name : "client",
+  html : (n, client) => `<div id="client-${client.name}">${client.name} - ${client.age}<br></div>`
 })
 
 n.set({
-  "name": 'clientList',
-  "html" : (n, data) => {
+  name: 'clientList',
+  html : (n, data) => {
     var text = `<div id="emitEvent">EMIT EVENT</div>`
     data.forEach(client => {
       text += n.get('client', client)
     })
     return text
   },
-  "load": (n, data) => {
-    console.log("Load clientList!")
-  },
-  "ready" : (n, data) => {
+  ready : (n, data) => {
     data.forEach(client => {
       n.on(`#client-${client.name}`, 'click', function () {
         n.render('paintTest', 'main3', { date : new Date(), name: client.name })
@@ -38,6 +36,30 @@ n.set({
   }
 })
 
+n.set({
+  name: 'fetchNews',
+  load: (n, data, render) => {
+    console.log(`Fetch data from url: ${data}`)
+    setTimeout(() => {
+      var recibedArticles = [
+        { title : "Title 1"},
+        { title : "Title 2"}
+      ]
+
+      render(recibedArticles)
+    }, 2000)
+  },
+  html : (n, data) => {
+    var text = `<div>LATEST NEWS(${data.length}):</div>`
+    data.forEach(article => {
+      text += `<div>${article.title}<br></div>`
+    })
+    return text
+  },
+  ready : (n, data) => {
+    console.log(`Fetch ${data.length} articles.`)
+  }
+})
 
 n.set('namePaint', (n, name) => `HELLO ${name}!`)
 
@@ -51,6 +73,8 @@ n.ready(() => {
   n.model.push('clients', { name : 'client 1', age : 18, dif : 2 })
   n.model.push('clients', { name : 'client 2', age : 19, dif : 1 })
   n.render('clientList', 'main', n.model.get('clients'))
+
+  n.render('fetchNews', 'main4', 'http://url')
 
   n.on('.main2', 'click', () => {
     n.emit('eventTest', 'from ready function')

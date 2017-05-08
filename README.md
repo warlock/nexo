@@ -33,7 +33,7 @@ const n = require("nexo")
 <script src="nexo/nexo.js"></script>
 ```
 
-### Demo for version 0.0.36:
+### Component demo:
 ```javascript
 n.set({
   name : 'button',
