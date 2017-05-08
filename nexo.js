@@ -42,6 +42,12 @@ var n = {
   },
   "model": {
     "store": {},
+    "create": function (model, data) {
+      if (data instanceof Array) n.model.store[model] = data;
+      else n.model.store[model] = [data];
+      n.model.store[model].name = 'model';
+      n.model.store[model].model = model;
+    },
     "set": function (model, data) {
       if (data instanceof Array) n.model.store[model] = data;
       else n.model.store[model] = [data];
@@ -50,12 +56,17 @@ var n = {
       n.model.render(model);
     },
     "get": function (model) {
-      if (n.empty(n.model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-      else return n.model.store[model];
+      if (n.empty(n.model.store[model])) {
+        n.model.create(model, []);
+        return n.model.store[model];
+      } else return n.model.store[model];
     },
     "push": function (model, data) {
-      if (n.empty(n.model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-      else {
+      if (n.empty(n.model.store[model])) {
+        n.model.create(model, []);
+        n.model.store[model].push(data);
+        n.model.render(model);
+      } else {
         n.model.store[model].push(data);
         n.model.render(model);
       }
@@ -119,18 +130,14 @@ var n = {
           });
           return chck;
         });
-        n.model.store[model] = res;
-        n.model.store[model].name = 'model';
-        n.model.store[model].model = model;
+        n.model.create(model, res);
         n.model.render(model);
       }
     },
     "clear": function (model) {
       if (n.empty(n.model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
       else {
-        n.model.store[model] = [];
-        n.model.store[model].name = 'model';
-        n.model.store[model].model = model;
+        n.model.create(model, []);
         n.model.render(model);
       }
     },
@@ -228,19 +235,11 @@ var n = {
       if (typeof comp === "object" && comp instanceof Array) {
         comp.forEach(function (el) {
           if (n.empty(el.name) || n.empty(el.html)) throw new Error('Please set \'html\' and \'name\' values.');
-          else {
-            n.data[el.name] = {};
-            n.data[el.name].html = el.html;
-            if (!n.empty(el.action) && typeof el.action === 'function') n.data[el.name].action = el.action;
-          }
+          else n.set(el);
         });
       } else {
         if (n.empty(comp.name) || n.empty(comp.html)) throw new Error('Please set \'html\' and \'name\' values.');
-        else {
-          n.data[comp.name] = {};
-          n.data[comp.name].html = comp.html;
-          if (!n.empty(comp.action) && typeof comp.action === 'function') n.data[comp.name].action = comp.action;
-        }
+        else n.set(comp);
       }
     }
   },

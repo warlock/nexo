@@ -7,52 +7,55 @@
   <div class="main2">clickme</div>
   <div id="main3"></div>
   <script>
-  n.set({
-    "name": 'clientList',
-    "html" : (n, data) => {
-      var text = `<div id="emitEvent">EMIT EVENT</div>`
-      data.forEach((e) => {
-        text += `<div id="client-${e.name}">${e.name}<br></div>`
-      })
-      return text
-    },
-    "load": (n, data) => {
-      console.log("Load clientList!")
-      n.model.push('clients', { name : 'eudald', edad : 18, dif : 2 })
-      n.model.push('clients', { name : 'josep', edad : 18, dif : 1 })
-    },
-    "action" : (n, data) => {
-      console.log('Rendering clientList!')
-      
-      data.forEach(e => {
-        n.on(`#client-${e.name}`, 'click', function () {
-          n.render('paintTest', 'main3', { date : new Date(), name: e.name })
-        })
-      })
 
-      n.on('#emitEvent', 'click', () => {
-        n.emit('eventTest', 'from clientList')
-      })
-    }
-  })
+n.set({
+  "name" : "client",
+  "html" : (n, client) => `<div id="client-${client.name}">${client.name} - ${client.age}<br></div>`
+})
 
-
-  n.set('namePaint', (n, name) => `HELLO ${name}!`)
-
-  n.set('paintTest', (n, data) => `<strong>Test ${data.date} : ${n.get('namePaint', data.name)}</strong>`)
-
-  n.on('eventTest', data => {
-    console.log(`Recibed: ${data}`)
-  })
-
-  n.ready(() => {
-    n.model.set('clients', [])
-    n.render('clientList', 'main', n.model.get('clients'))
-
-    n.on('.main2', 'click', () => {
-      n.emit('eventTest', 'from ready function')
+n.set({
+  "name": 'clientList',
+  "html" : (n, data) => {
+    var text = `<div id="emitEvent">EMIT EVENT</div>`
+    data.forEach(client => {
+      text += n.get('client', client)
     })
+    return text
+  },
+  "load": (n, data) => {
+    console.log("Load clientList!")
+  },
+  "ready" : (n, data) => {
+    data.forEach(client => {
+      n.on(`#client-${client.name}`, 'click', function () {
+        n.render('paintTest', 'main3', { date : new Date(), name: client.name })
+      })
+    })
+
+    n.on('#emitEvent', 'click', () => {
+      n.emit('eventTest', 'from clientList')
+    })
+  }
+})
+
+
+n.set('namePaint', (n, name) => `HELLO ${name}!`)
+
+n.set('paintTest', (n, data) => `<strong>Test ${data.date} : ${n.get('namePaint', data.name)}</strong>`)
+
+n.on('eventTest', data => {
+  console.log(`Recibed: ${data}`)
+})
+
+n.ready(() => {
+  n.model.push('clients', { name : 'client 1', age : 18, dif : 2 })
+  n.model.push('clients', { name : 'client 2', age : 19, dif : 1 })
+  n.render('clientList', 'main', n.model.get('clients'))
+
+  n.on('.main2', 'click', () => {
+    n.emit('eventTest', 'from ready function')
   })
+})
   </script>
 </body>
 </html>

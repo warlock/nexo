@@ -38,7 +38,7 @@ const n = require("nexo")
 n.set({
   name : 'button',
   html : (n, data) => `<b id="click_now">Clickme ${data}!</b>`,
-  action : (n, data) => {
+  ready : (n, data) => {
     n.on('#click_now', 'click', () => {
       console.log(`Hi! ${data}`)
     })
