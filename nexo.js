@@ -253,18 +253,35 @@ var n = {
     else if (n.empty(n.data[name])) throw new Error('Component \'' + name + '\' does not exists.');
     else if (n.empty(n.data[name].html)) throw new Error('The component \'' + name + '\' does not have html.');
     else {
-      if (!n.empty(n.data[name].load) && typeof n.data[name].load === 'function') n.data[name].load(n, attr);
-      document.getElementById(id).innerHTML = n.data[name].html(n, attr);
-      if (!n.empty(attr) && !n.empty(attr.name) && attr.name === 'model') n.relations[id] = {
-        "comp": name,
-        "model": attr.model
-      };
-      else if (!n.empty(n.relations[id])) delete n.relations[id];
-      if (!n.empty(n.data[name].action) && typeof n.data[name].action === 'function') n.stack.push({
-        "action": n.data[name].action,
-        "attr": [n, attr]
-      });
-      n.run();
+      if (!n.empty(n.data[name].load) && typeof n.data[name].load === 'function') {
+        var rend = function (data) {
+          if (!n.empty(data) && !n.empty(data.name) && data.name === 'model') n.relations[id] = {
+            "comp": name,
+            "model": data.model
+          };
+          else if (!n.empty(n.relations[id])) delete n.relations[id];
+          if (!n.empty(n.data[name].action) && typeof n.data[name].action === 'function') n.stack.push({
+            "action": n.data[name].action,
+            "attr": [n, data]
+          });
+          document.getElementById(id).innerHTML = n.data[name].html(n, data);
+          n.run();
+        };
+
+        n.data[name].load(n, attr, rend);
+      } else {
+        document.getElementById(id).innerHTML = n.data[name].html(n, attr);
+        if (!n.empty(attr) && !n.empty(attr.name) && attr.name === 'model') n.relations[id] = {
+          "comp": name,
+          "model": attr.model
+        };
+        else if (!n.empty(n.relations[id])) delete n.relations[id];
+        if (!n.empty(n.data[name].action) && typeof n.data[name].action === 'function') n.stack.push({
+          "action": n.data[name].action,
+          "attr": [n, attr]
+        });
+        n.run();
+      }
     }
   },
   "emit": function (ev, data) {
