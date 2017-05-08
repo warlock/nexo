@@ -198,7 +198,7 @@ var n = {
         "action": n.data[name].action,
         "attr": [n, attr]
       });
-      if (!n.empty(n.data[name].load) && typeof n.data[name].load === 'function') n.data[name].load();
+      if (!n.empty(n.data[name].load) && typeof n.data[name].load === 'function') n.data[name].load(n, attr);
       return n.data[name].html(n, attr);
     }
   },
@@ -254,7 +254,7 @@ var n = {
     else if (n.empty(n.data[name])) throw new Error('Component \'' + name + '\' does not exists.');
     else if (n.empty(n.data[name].html)) throw new Error('The component \'' + name + '\' does not have html.');
     else {
-      if (!n.empty(n.data[name].load) && typeof n.data[name].load === 'function') n.data[name].load();
+      if (!n.empty(n.data[name].load) && typeof n.data[name].load === 'function') n.data[name].load(n, attr);
       document.getElementById(id).innerHTML = n.data[name].html(n, attr);
       if (!n.empty(attr) && !n.empty(attr.name) && attr.name === 'model') n.relations[id] = {
         "comp": name,
