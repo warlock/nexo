@@ -205,8 +205,14 @@ var n = {
         "action": n.data[name].action,
         "attr": [n, attr]
       });
-      if (!n.empty(n.data[name].load) && typeof n.data[name].load === 'function') n.data[name].load(n, attr);
-      return n.data[name].html(n, attr);
+
+      if (!n.empty(n.data[name].load) && typeof n.data[name].load === 'function') {
+        var rend = function (data) {
+          return n.data[name].html(n, data);
+        };
+
+        n.data[name].load(n, attr, rend);
+      } else return n.data[name].html(n, attr);
     }
   },
   "set": function (name, html, action) {
