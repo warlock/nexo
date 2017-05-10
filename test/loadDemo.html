@@ -24,7 +24,12 @@ n.set({
       render(content.toUpperCase())
     }, 2000)
   },
-  html : (n, content) => `${content}`
+  html : (n, content) => `<div id="${content}">${content}</div>`,
+  ready : (n, content) => {
+    n.on(n.id(content), 'click', () => {
+      console.log(`Clicked: ${content}`)
+    })
+  }
 })
 
 

@@ -204,15 +204,11 @@ var n = {
   "get": function (name, attr) {
     if (n.empty(name)) throw new Error('Get without name');
     else {
-      if (!n.empty(n.data[name].action) && typeof n.data[name].action === 'function') n.stack.push({
-        "action": n.data[name].action,
-        "attr": [n, attr]
-      });
-
       if (!n.empty(n.data[name].load) && typeof n.data[name].load === 'function') {
         var randId = name + "_ " + n.randId();
         var rend = function (data) {
           n.id(randId).outerHTML = n.data[name].html(n, data);
+          if (!n.empty(n.data[name].action) && typeof n.data[name].action === 'function') n.data[name].action(n, data);
         };
 
         n.data[name].load(n, attr, rend);
