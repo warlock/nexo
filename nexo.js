@@ -186,6 +186,9 @@ var n = {
   "empty": function (val) {
     return val === undefined || val === null || val === '';
   },
+  "randId": function () {
+    return Math.random().toString(36).substr(2, 10);
+  },
   "id": function (id) {
     if (n.empty(id)) throw new Error('Id without value');
     else return document.getElementById(id);
@@ -207,11 +210,13 @@ var n = {
       });
 
       if (!n.empty(n.data[name].load) && typeof n.data[name].load === 'function') {
+        var randId = name + "_ " + n.randId();
         var rend = function (data) {
-          return n.data[name].html(n, data);
+          n.id(randId).outerHTML = n.data[name].html(n, data);
         };
 
         n.data[name].load(n, attr, rend);
+        return "<div id=\"" + randId + "\"></div>";
       } else return n.data[name].html(n, attr);
     }
   },
