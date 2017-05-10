@@ -49,7 +49,7 @@ n.set({
   html : (n, data) => {
     var text = `<div>LATEST NEWS(${data.length}):</div>`
     data.forEach(article => {
-      text += `<div>${n.get('article', article)}<br></div>`
+      text += `<div>${n.get('article', article)}</div>`
     })
     return text
   },
