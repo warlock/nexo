@@ -213,7 +213,13 @@ var n = {
 
         n.data[name].load(n, attr, rend);
         return "<div id=\"" + randId + "\"></div>";
-      } else return n.data[name].html(n, attr);
+      } else {
+        if (!n.empty(n.data[name].action) && typeof n.data[name].action === 'function') n.stack.push({
+          "action": n.data[name].action,
+          "attr": [n, attr]
+        });
+        return n.data[name].html(n, attr);
+      }
     }
   },
   "set": function (name, html, action) {
@@ -252,7 +258,7 @@ var n = {
   },
   "destroy": function (name) {
     if (n.empty(name)) throw new Error('Destroy without objective');
-    else document.getElementById(name).innerHTML = "";
+    else document.querySelector(name).innerHTML = "";
   },
   "render": function (name, id, attr) {
     if (n.empty(name)) throw new Error('Render without name');
