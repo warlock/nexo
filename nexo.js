@@ -84,8 +84,25 @@ var n = {
         return ret;
       }
     },
+    "sort": function (model,by) {
+      if (n.empty(n.model.store[model])) throw new Error('Can\'t sort. Model \'' + model + '\' does not exists.');
+      else if (n.empty(by)) throw new Error('Can\'t sort \'' + model + '\' by undefined param.');
+      else {
+        var ret = n.model.store[model].sort(function (a, b) {
+          if (a[by] > b[by]) {
+            return 1;
+          }
+          if (a[by] < b[by]) {
+            return -1;
+          }
+          return 0;
+        });
+        n.model.render(model);
+        return ret;
+      }
+    },
     "reverse": function (model) {
-      if (n.empty(n.model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+      if (n.empty(n.model.store[model])) throw new Error('Can\'t reverse. Model \'' + model + '\' does not exists.');
       else {
         var ret = n.model.store[model].reverse();
         n.model.render(model);
