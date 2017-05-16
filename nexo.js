@@ -89,12 +89,8 @@ var n = {
       else if (n.empty(by)) throw new Error('Can\'t sort \'' + model + '\' by undefined param.');
       else {
         var ret = n.model.store[model].sort(function (a, b) {
-          if (a[by] > b[by]) {
-            return 1;
-          }
-          if (a[by] < b[by]) {
-            return -1;
-          }
+          if (a[by] > b[by]) return 1;
+          if (a[by] < b[by]) return -1;
           return 0;
         });
         n.model.render(model);
@@ -106,12 +102,8 @@ var n = {
       else if (n.empty(by)) throw new Error('Can\'t sort \'' + model + '\' by undefined param.');
       else {
         var ret = n.model.store[model].sort(function (a, b) {
-          if (a[by] < b[by]) {
-            return 1;
-          }
-          if (a[by] > b[by]) {
-            return -1;
-          }
+          if (a[by] < b[by]) return 1;
+          if (a[by] > b[by]) return -1;
           return 0;
         });
         n.model.render(model);
