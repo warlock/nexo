@@ -49,10 +49,7 @@ var n = {
       n.model.store[model].model = model;
     },
     "set": function (model, data) {
-      if (data instanceof Array) n.model.store[model] = data;
-      else n.model.store[model] = [data];
-      n.model.store[model].name = 'model';
-      n.model.store[model].model = model;
+      n.model.create(model, data);
       n.model.render(model);
     },
     "get": function (model) {
@@ -63,7 +60,7 @@ var n = {
     },
     "push": function (model, data) {
       if (n.empty(n.model.store[model])) {
-        n.model.create(model, []);
+        if (n.model.store[model] === undefined) n.model.create(model, []);
         n.model.store[model].push(data);
         n.model.render(model);
       } else {
