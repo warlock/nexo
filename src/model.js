@@ -2,108 +2,108 @@ var type = require('./type');
 
 var model = {
   "store": {},
-  "create": function (model, data) {
-    if (type.isEmpty(model) && !type.isString(model)) throw new Error('Model without name.');
-    if (type.isArray(data)) model.store[model] = data;
-    else model.store[model] = [data];
-    model.store[model].name = 'model';
-    model.store[model].model = model;
+  "create": function (name, data) {
+    if (type.isEmpty(name) && !type.isString(name)) throw new Error('Model without name.');
+    if (type.isArray(data)) model.store[name] = data;
+    else model.store[name] = [data];
+    model.store[name].name = 'model';
+    model.store[name].model = name;
   },
-  "set": function (model, data) {
-    model.create(model, data);
-    //model.render(model);
+  "set": function (name, data) {
+    model.create(name, data);
+    //model.render(name);
   },
-  "get": function (model) {
-    if (type.isEmpty(model.store[model])) {
-      model.create(model, []);
-      return model.store[model];
-    } else return model.store[model];
+  "get": function (name) {
+    if (type.isEmpty(model.store[name])) {
+      model.create(name, []);
+      return model.store[name];
+    } else return model.store[name];
   },
-  "push": function (model, data) {
-    if (type.isEmpty(model.store[model])) {
-      if (model.store[model] === undefined) model.create(model, []);
-      model.store[model].push(data);
-      //model.render(model);
+  "push": function (name, data) {
+    if (type.isEmpty(name.store[name])) {
+      if (name.store[name] === undefined) model.create(name, []);
+      model.store[name].push(data);
+      //model.render(name);
     } else {
-      model.store[model].push(data);
-      //model.render(model);
+      model.store[name].push(data);
+      //model.render(name);
     }
   },
-  "pop": function (model) {
-    if (type.isEmpty(model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+  "pop": function (name) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
     else {
-      var ret = model.store[model].pop();
-      //model.render(model);
+      var ret = model.store[name].pop();
+      //model.render(name);
       return ret;
     }
   },
-  "shift": function (model) {
-    if (type.isEmpty(model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+  "shift": function (name) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
     else {
-      var ret = model.store[model].shift();
-      //model.render(model);
+      var ret = model.store[name].shift();
+      //model.render(name);
       return ret;
     }
   },
-  "sort": function (model,by) {
-    if (type.isEmpty(model.store[model])) throw new Error('Can\'t sort. Model \'' + model + '\' does not exists.');
-    else if (type.isEmpty(by)) throw new Error('Can\'t sort \'' + model + '\' by undefined param.');
+  "sort": function (name,by) {
+    if (type.isEmpty(name.store[name])) throw new Error('Can\'t sort. Model \'' + name + '\' does not exists.');
+    else if (type.isEmpty(by)) throw new Error('Can\'t sort \'' + name + '\' by undefined param.');
     else {
-      var ret = model.store[model].sort(function (a, b) {
+      var ret = model.store[name].sort(function (a, b) {
         if (a[by] > b[by]) return 1;
         if (a[by] < b[by]) return -1;
         return 0;
       });
-      //model.render(model);
+      //model.render(name);
       return ret;
     }
   },
-  "sortReverse": function (model,by) {
-    if (type.isEmpty(model.store[model])) throw new Error('Can\'t sort. Model \'' + model + '\' does not exists.');
-    else if (type.isEmpty(by)) throw new Error('Can\'t sort \'' + model + '\' by undefined param.');
+  "sortReverse": function (name,by) {
+    if (type.isEmpty(name.store[name])) throw new Error('Can\'t sort. Model \'' + name + '\' does not exists.');
+    else if (type.isEmpty(by)) throw new Error('Can\'t sort \'' + name + '\' by undefined param.');
     else {
-      var ret = model.store[model].sort(function (a, b) {
+      var ret = model.store[name].sort(function (a, b) {
         if (a[by] < b[by]) return 1;
         if (a[by] > b[by]) return -1;
         return 0;
       });
-      //model.render(model);
+      //model.render(name);
       return ret;
     }
   },
-  "reverse": function (model) {
-    if (type.isEmpty(model.store[model])) throw new Error('Can\'t reverse. Model \'' + model + '\' does not exists.');
+  "reverse": function (name) {
+    if (type.isEmpty(name.store[name])) throw new Error('Can\'t reverse. Model \'' + name + '\' does not exists.');
     else {
-      var ret = model.store[model].reverse();
-      //model.render(model);
+      var ret = model.store[name].reverse();
+      //model.render(name);
       return ret;
     }
   },
-  "size": function (model) {
-    if (type.isEmpty(model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-    else return model.store[model].length;
+  "size": function (name) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else return model.store[name].length;
   },
-  "keys": function (model) {
-    if (type.isEmpty(model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-    else return Object.keys(model.store[model][0]);
+  "keys": function (name) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else return Object.keys(name.store[name][0]);
   },
-  "length": function (model) {
-    if (type.isEmpty(model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-    else return model.store[model].length;
+  "length": function (name) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else return model.store[name].length;
   },
-  "delete": function (model) {
-    if (type.isEmpty(model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-    else delete model.store[model];
+  "delete": function (name) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else delete model.store[name];
   },
-  "remove": function (model, data) {
-    if (type.isEmpty(model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-    else if (type.isEmpty(data)) throw new Error('Remove in \'' + model + '\' need a object or key.');
+  "remove": function (name, data) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else if (type.isEmpty(data)) throw new Error('Remove in \'' + name + '\' need a object or key.');
     else if (typeof data === 'number' || data instanceof Number) {
-      model.store[model].splice(data, 1);
-      //model.render(model);
+      model.store[name].splice(data, 1);
+      //model.render(name);
     } else if (typeof data === 'object') {
       var keys = Object.keys(data);
-      var res =  model.store[model].filter(function (e) {
+      var res =  model.store[name].filter(function (e) {
         var chck = true;
         keys.forEach(function (k) {
           if (typeof e[k] === 'string') {
@@ -114,36 +114,36 @@ var model = {
         });
         return chck;
       });
-      model.create(model, res);
-      //model.render(model);
+      model.create(name, res);
+      //model.render(name);
     }
   },
-  "clear": function (model) {
-    if (type.isEmpty(model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
+  "clear": function (name) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
     else {
-      model.create(model, []);
-      //model.render(model);
+      model.create(name, []);
+      //model.render(name);
     }
   },
-  "index": function (model, index) {
-    if (type.isEmpty(model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-    else if (type.isEmpty(model.store[model][index])) throw new Error('Model \'' + model + '\' not have index: ' + index);
-    else return model.store[model][index];
+  "index": function (name, index) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else if (type.isEmpty(name.store[name][index])) throw new Error('Model \'' + name + '\' not have index: ' + index);
+    else return model.store[name][index];
   },
-  "first": function (model) {
-    if (type.isEmpty(model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-    else return model.store[model][0];
+  "first": function (name) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else return model.store[name][0];
   },
-  "last": function (model) {
-    if (type.isEmpty(model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-    else return model.store[model][model.store[model].length-1];
+  "last": function (name) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else return model.store[name][model.store[name].length-1];
   },
-  "filter": function (model, obj) {
-    if (type.isEmpty(model.store[model])) throw new Error('Model \'' + model + '\' does not exists.');
-    else if (type.isEmpty(obj) && typeof obj !== 'object') throw new Error('Find in \'' + model + '\' need a object.');
+  "filter": function (name, obj) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else if (type.isEmpty(obj) && typeof obj !== 'object') throw new Error('Find in \'' + name + '\' need a object.');
     else {
       var keys = Object.keys(obj);
-      var data =  model.store[model].filter(function (e) {
+      var data =  model.store[name].filter(function (e) {
         var chck = true;
         keys.forEach(function (k) {
           if (typeof e[k] === 'string') {
@@ -155,7 +155,7 @@ var model = {
         return chck;
       });
       data.name = 'model';
-      data.model = model;
+      data.model = name;
 
       /*
       for(var k in n.relations) {
@@ -166,9 +166,9 @@ var model = {
   }
 
   /*,
-  "render": function (model) {
+  "render": function (name) {
     for (var k in n.relations) {
-      if(n.relations[k].model ===  model) n.render(n.relations[k].comp, k, model.get(model));
+      if(n.relations[k].model ===  model) n.render(n.relations[k].comp, k, model.get(name));
     }
   }
   */

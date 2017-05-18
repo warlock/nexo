@@ -31,10 +31,12 @@ var n = {
       if (type.isObject(object)) {
         object.name = name;
         n.component[name] = object;
+        n.model.create(name, []);
       } else throw new Error('Need a object for create a component.');
     } else if (type.isObject(name)) {
       object = name;
       n.component[object.name] = object;
+      n.model.create(object.name, []);
     } else throw new Error('Need a parameters for create a component.');
   },
   "render": function (name, data) {
@@ -50,7 +52,7 @@ var n = {
       }
     } else {
       if (!type.isEmpty(data.status)) {
-        n.model.set(name, data.status);
+        n.model.create(name, data.status);
       }
       if (!type.isEmpty(data.element)) {
         n.comp.mark(data.element, randId);

@@ -11,77 +11,8 @@
 
 n.set({
   name : "client",
-  html : n => `Hola C`
+  html : n => `INFO: ${JSON.stringify(n.model.get('client'))}`
 })
-
-/*
-n.set({
-  name: 'clientList',
-  html : (n, data) => {
-    var text = `<div id="emitEvent">EMIT EVENT</div>`
-    data.forEach(client => {
-      text += n.get('client', client)
-    })
-    return text
-  },
-  ready : (n, data) => {
-    data.forEach(client => {
-      n.on(`#client-${client.name}`, 'click', function () {
-        n.render('paintTest', 'main3', { date : new Date(), name: client.name })
-      })
-    })
-
-    n.on('#emitEvent', 'click', () => {
-      n.emit('eventTest', 'from clientList')
-    })
-  }
-})
-
-n.set({
-  name: 'fetchNews',
-  load: (n, data, render) => {
-    console.log(`Fetch data from url: ${data}`)
-    setTimeout(() => {
-      var recibedArticles = [
-        { title : "Title 1"},
-        { title : "Title 2"}
-      ]
-
-      render(recibedArticles)
-    }, 2000)
-  },
-  html : (n, data) => {
-    var text = `<div>LATEST NEWS(${data.length}):</div>`
-    data.forEach(article => {
-      text += `<div>${article.title}<br></div>`
-    })
-    return text
-  },
-  ready : (n, data) => {
-    console.log(`Fetch ${data.length} articles.`)
-  }
-})
-
-n.set('namePaint', (n, name) => `HELLO ${name}!`)
-
-n.set('paintTest', (n, data) => `<strong>Test ${data.date} : ${n.get('namePaint', data.name)}</strong>`)
-
-n.on('eventTest', data => {
-  console.log(`Recibed: ${data}`)
-})
-
-n.ready(() => {
-  n.model.push('clients', { name : 'client 1', age : 18, dif : 2 })
-  n.model.push('clients', { name : 'client 2', age : 19, dif : 1 })
-  n.render('clientList', 'main', n.model.get('clients'))
-
-  n.render('fetchNews', 'main4', 'http://url')
-
-  n.on('.main2', 'click', () => {
-    n.emit('eventTest', 'from ready function')
-  })
-})
-*/
 
 n.ready(() => {
   console.log('bu')
