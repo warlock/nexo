@@ -47,7 +47,9 @@ var n = {
     else if (type.isEmpty(data)) {
       if (type.isEmpty(n.component[name].html)) throw new Error('The component ' + name + ' no have a valid html.');
       else {
-        n.comp.render(n, name, randId);
+        setTimeout(() => {
+          n.comp.render(n, name, randId);
+        },1000)
         return n.comp.mark(randId, name, n);
       }
     } else {
@@ -58,7 +60,9 @@ var n = {
         n.comp.mark(data.element, randId);
         n.comp.render(n, name, randId);
       } else {
-        n.comp.render(n, name, randId);
+        setTimeout(() => {
+          n.comp.render(n, name, randId);
+        },1000)
         return comp.mark(randId);
       }
     }

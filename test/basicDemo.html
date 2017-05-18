@@ -14,8 +14,39 @@ n.set({
   html : n => `INFO: ${JSON.stringify(n.model.get('client'))}`
 })
 
+n.set({
+  name : "loaddemo",
+  load : (n, cont) => {
+    setTimeout(() => {
+      cont('load: ' + n.model.get('loaddemo'))
+    }, 3000)
+  },
+  html : n => `INFO: ${JSON.stringify(n.model.get('loaddemo'))}`,
+  ready : n => {
+    console.log(JSON.stringify(n.model.get('loaddemo')))
+  }
+})
+
+n.set({
+  name : "loaddemo2",
+  load : (n, cont) => {
+    setTimeout(() => {
+      cont('load2: ' + n.model.get('loaddemo2'))
+    }, 3000)
+  },
+  html : n => `INFO: ${JSON.stringify(n.model.get('loaddemo2'))}<br>
+    Aixo es el client: ${n.render('client')}
+  `,
+  ready : n => {
+    console.log(JSON.stringify(n.model.get('loaddemo2')))
+  }
+})
+
+
 n.ready(() => {
   console.log('bu')
+  //n.render('client', { element : '.main2', status : "holaaaa" })
+  n.render('loaddemo2', { element : '#main', status : "adeu" })
 })
   </script>
 </body>
