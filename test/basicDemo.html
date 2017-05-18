@@ -11,9 +11,10 @@
 
 n.set({
   name : "client",
-  html : (n, client) => `<div id="client-${client.name}">${client.name} - ${client.age}<br></div>`
+  html : n => `Hola C`
 })
 
+/*
 n.set({
   name: 'clientList',
   html : (n, data) => {
@@ -79,6 +80,11 @@ n.ready(() => {
   n.on('.main2', 'click', () => {
     n.emit('eventTest', 'from ready function')
   })
+})
+*/
+
+n.ready(() => {
+  console.log('bu')
 })
   </script>
 </body>
