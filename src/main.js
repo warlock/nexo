@@ -3,7 +3,6 @@ var type = require('./type');
 var params = require('./params');
 var model = require('./model');
 var comp = require('./comp');
-var randid = require('./randid');
 
 var n = {
   "comp": comp,
@@ -22,7 +21,7 @@ var n = {
     else return document.querySelector(element);
   },
   "run": function () {
-    for (var i = 0; i < n.stack.length; i++) n.stack[i].action(n.stack[i].attr[0], n.stack[i].attr[1]);
+    for (var i = 0; i < n.stack.length; i++) n.stack[i](n);
     n.stack = [];
   },
   "set": function (name, object) {
@@ -41,30 +40,21 @@ var n = {
   },
   "render": function (name, data) {
     //render component
-    var randId = randid();
     if (type.isEmpty(name)) throw new Error('Need a valid name component');
     else if (type.isEmpty(n.component[name])) throw new Error('The component ' + name + ' no exists.');
     else if (type.isEmpty(data)) {
       if (type.isEmpty(n.component[name].html)) throw new Error('The component ' + name + ' no have a valid html.');
-      else {
-        setTimeout(() => {
-          n.comp.render(n, name, randId);
-        },1000)
-        return n.comp.mark(randId, name, n);
-      }
+      else return n.comp.render(n, name);
     } else {
       if (!type.isEmpty(data.status)) {
         n.model.create(name, data.status);
       }
       if (!type.isEmpty(data.element)) {
-        n.comp.mark(data.element, randId);
-        n.comp.render(n, name, randId);
+        return n.comp.render(n, name);
       } else {
-        setTimeout(() => {
-          n.comp.render(n, name, randId);
-        },1000)
-        return comp.mark(randId);
+        n.comp.render(n, name, data.element);
       }
+      n.run();
     }
   },
   //"load": function (comp) {
