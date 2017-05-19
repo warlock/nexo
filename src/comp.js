@@ -29,7 +29,7 @@ var comp = {
         if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.stack.push(n.component[name].ready);
         return n.component[name].html(n);
       } else {
-        document.getElementById(element).innerHTML = n.component[name].html(n);
+        document.querySelector(element).innerHTML = n.component[name].html(n);
         if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.stack.push(n.component[name].ready);
       }
     }
