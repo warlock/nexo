@@ -57,9 +57,14 @@ var n = {
       n.run();
     }
   },
-  //"load": function (comp) {
-    //LOAD COMPONENT
-  //},
+  "load": function (comps) {
+    if (!type.isEmpty(comps)) {
+      if (!type.isArray(comps)) n.set(comps);
+      else {
+        for (var i = 0; i < comps.length; i++) n.set(comps[i]);
+      }
+    }
+  },
   "destroy": function (name) {
     if (type.isEmpty(name)) throw new Error('Destroy without objective');
     else document.querySelector(name).innerHTML = "";
