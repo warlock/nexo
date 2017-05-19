@@ -1,5 +1,6 @@
 var type = require('./type');
 
+/*
 var model = {
   "store": {},
   "set": function (name, data) {
@@ -145,3 +146,37 @@ var model = {
 };
 
 module.exports = model;
+
+*/
+
+module.exports = function (name, n) {
+  if (type.isEmpty(n.store[name])) n.store[name] = [];
+
+  this.get = function () {
+    return n.store[name];
+  };
+
+  this.render = function (element) {
+    if (type.isEmpty(element)) {
+      throw Error("Autorender not implemented yet");
+    } else {
+      document.getElementById(element).innerHTML = n.component[name].html(n);
+      n.component[name].ready(n);
+    }
+  };
+
+  this.set = function (data) {
+    if (!type.isEmpty(data)) n.store[name] = data;
+    return this;
+  };
+
+  this.push = function (data) {
+    if (type.isEmpty(n.store[name])) n.store[name] = [];
+    if (type.isArray(n.store[name])) n.store[name].push(data);
+    else throw new Error('Model ' + name + ' is not array.');
+  };
+
+
+
+
+};

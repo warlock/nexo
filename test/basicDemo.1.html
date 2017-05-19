@@ -11,22 +11,22 @@
 
 n.set({
   load : (n, done) => {
-    done(n.model('client').get().toUpperCase())
+    done(n.model.get('client')[0].toUpperCase())
   },
   name : "client",
-  html : n => `CLIENT INFO: ${n.model('client').get()}`
+  html : n => `CLIENT INFO: ${JSON.stringify(n.model.get('client'))}`
 })
 
 n.set({
   name : "loaddemo",
   load : (n, cont) => {
     setTimeout(() => {
-      cont('load: ' + n.model('loaddemo').get())
+      cont('load: ' + n.model.get('loaddemo'))
     }, 3000)
   },
-  html : n => `INFO: ${n.model('loaddemo').get()}`,
+  html : n => `INFO: ${JSON.stringify(n.model.get('loaddemo'))}`,
   ready : n => {
-    console.log(n.model('loaddemo').get())
+    console.log(JSON.stringify(n.model.get('loaddemo')))
   }
 })
 
@@ -34,22 +34,20 @@ n.set({
   name : "loaddemo2",
   load : (n, cont) => {
     setTimeout(() => {
-      cont('load2: ' + n.model('loaddemo2').get())
+      cont('load2: ' + n.model.get('loaddemo2'))
     }, 2000)
   },
-  html : n => `INFO: ${n.model('loaddemo2').get()}<br>
+  html : n => `INFO: ${JSON.stringify(n.model.get('loaddemo2'))}<br>
     This is the client: ${n.render('client', { status : 'asdasd' })}
   `,
   ready : n => {
-    if (n.model('loaddemo2').get() !== 'holaaas') {
-      console.log('Cambiant el loaddemo2 model... i tornant a renderitzar a... main4')
-      n.model('loaddemo2').set('holaaas').render('main4')
-    } else console.log("No s'ha de cambiar")
+    console.log(JSON.stringify(n.model.get('loaddemo2')))
   }
 })
 
 
 n.ready(() => {
+  console.log('bu')
   n.render('client', { element : '.main2', status : "holaaaa" })
   n.render('loaddemo2', { element : '#main', status : "adeu" })
 })

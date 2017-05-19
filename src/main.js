@@ -1,7 +1,7 @@
 var cookies = require('./cookies');
 var type = require('./type');
 var params = require('./params');
-var model = require('./model');
+var Model = require('./model');
 var comp = require('./comp');
 
 var n = {
@@ -13,9 +13,10 @@ var n = {
   "cookies": cookies,
   "getParams": params,
   //"model": model,
-  "data": {},
+  "store": {},
   "model": function (name) {
-    return model;
+    if (type.isEmpty(name) && !type.isString(name)) throw new Error('Model without name.');
+    else return new Model(name, n);
   },
   "empty": function (val) {
     return val === undefined || val === null || val === '';
@@ -42,12 +43,12 @@ var n = {
       if (type.isObject(object)) {
         object.name = name;
         n.component[name] = object;
-        n.model.set(name);
+//        n.model.set(name);
       } else throw new Error('Need a object for create a component.');
     } else if (type.isObject(name)) {
       object = name;
       n.component[object.name] = object;
-      n.model.set(object.name);
+//      n.model.set(object.name);
     } else throw new Error('Need a parameters for create a component.');
   },
   "render": function (name, data) {
@@ -58,7 +59,8 @@ var n = {
       if (type.isEmpty(n.component[name].html)) throw new Error('The component ' + name + ' no have a valid html.');
       else return n.comp.render(n, name);
     } else {
-      if (!type.isEmpty(data.status)) n.model.set(name, data.status);
+      //if (!type.isEmpty(data.status)) n.model.set(name, data.status);
+      if (!type.isEmpty(data.status)) n.store[name] = data.status;
 
       if (type.isEmpty(data.element)) {
         return n.comp.render(n, name);
