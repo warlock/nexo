@@ -3,6 +3,6 @@ test/
 src/
 .DS_Store
 node_modules
-.eslint.js
+.eslintrc.js
 jsconfig.json
 webpack.config.js
