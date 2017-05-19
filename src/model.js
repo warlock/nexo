@@ -1,154 +1,5 @@
 var type = require('./type');
 
-/*
-var model = {
-  "store": {},
-  "set": function (name, data) {
-    if (type.isEmpty(name) && !type.isString(name)) throw new Error('Model without name.');
-    if (type.isEmpty(data)) model.store[name] = [];
-    else model.store[name] = data;
-  },
-  "get": function (name) {
-    if (type.isEmpty(name) && !type.isString(name)) throw new Error('Model without name.');
-    if (type.isEmpty(model.store[name])) model.set(name);
-    return model.store[name];
-  },
-  "push": function (name, data) {
-    if (type.isEmpty(name) && !type.isString(name)) throw new Error('Model without name.');
-    if (type.isEmpty(name.store[name])) model.set(name, []);
-    if (type.isArray(model.store[name])) model.store[name].push(data);
-    else throw new Error('Model ' + name + ' is not array.');
-  },
-  "pop": function (name) {
-    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
-    else {
-      if (type.isArray(model.store[name])) {
-        model.store[name].pop();
-        var ret = model.store[name].pop();
-        return ret;
-      } else throw new Error('Model ' + name + ' is not array.');
-    }
-  },
-  "shift": function (name) {
-    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
-    else {
-      if (type.isArray(model.store[name])) {
-        var ret = model.store[name].shift();
-        return ret;
-      } else throw new Error('Model ' + name + ' is not array.');
-    }
-  },
-  "sort": function (name,by) {
-    if (type.isEmpty(name.store[name])) throw new Error('Can\'t sort. Model \'' + name + '\' does not exists.');
-    else if (type.isEmpty(by)) throw new Error('Can\'t sort \'' + name + '\' by undefined param.');
-    else {
-      var ret = model.store[name].sort(function (a, b) {
-        if (a[by] > b[by]) return 1;
-        if (a[by] < b[by]) return -1;
-        return 0;
-      });
-      return ret;
-    }
-  },
-  "sortReverse": function (name,by) {
-    if (type.isEmpty(name.store[name])) throw new Error('Can\'t sort. Model \'' + name + '\' does not exists.');
-    else if (type.isEmpty(by)) throw new Error('Can\'t sort \'' + name + '\' by undefined param.');
-    else {
-      var ret = model.store[name].sort(function (a, b) {
-        if (a[by] < b[by]) return 1;
-        if (a[by] > b[by]) return -1;
-        return 0;
-      });
-      return ret;
-    }
-  },
-  "reverse": function (name) {
-    if (type.isEmpty(name.store[name])) throw new Error('Can\'t reverse. Model \'' + name + '\' does not exists.');
-    else {
-      var ret = model.store[name].reverse();
-      return ret;
-    }
-  },
-  "size": function (name) {
-    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
-    else return model.store[name].length;
-  },
-  "keys": function (name) {
-    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
-    else return Object.keys(name.store[name][0]);
-  },
-  "length": function (name) {
-    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
-    else return model.store[name].length;
-  },
-  "delete": function (name) {
-    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
-    else delete model.store[name];
-  },
-  "remove": function (name, data) {
-    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
-    else if (type.isEmpty(data)) throw new Error('Remove in \'' + name + '\' need a object or key.');
-    else if (type.isNumber(data)) {
-      model.store[name].splice(data, 1);
-    } else if (typeof data === 'object') {
-      var keys = Object.keys(data);
-      var res =  model.store[name].filter(function (e) {
-        var chck = true;
-        keys.forEach(function (k) {
-          if (typeof e[k] === 'string') {
-            if(e[k].indexOf(data[k]) >= 0) chck = false;
-          } else {
-            if(e[k] === data[k]) chck = false;
-          }
-        });
-        return chck;
-      });
-      model.set(name, res);
-    }
-  },
-  "clear": function (name) {
-    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
-    else model.set(name, []);
-  },
-  "index": function (name, index) {
-    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
-    else if (type.isEmpty(name.store[name][index])) throw new Error('Model \'' + name + '\' not have index: ' + index);
-    else return model.store[name][index];
-  },
-  "first": function (name) {
-    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
-    else return model.store[name][0];
-  },
-  "last": function (name) {
-    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
-    else return model.store[name][model.store[name].length-1];
-  },
-  "filter": function (name, obj) {
-    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
-    else if (type.isEmpty(obj) && typeof obj !== 'object') throw new Error('Find in \'' + name + '\' need a object.');
-    else {
-      var keys = Object.keys(obj);
-      var data =  model.store[name].filter(function (e) {
-        var chck = true;
-        keys.forEach(function (k) {
-          if (typeof e[k] === 'string') {
-            if(e[k].toLowerCase().indexOf(obj[k].toLowerCase()) < 0) chck = false;
-          } else {
-            if(e[k] !== obj[k]) chck = false;
-          }
-        });
-        return chck;
-      });
-
-      return data;
-    }
-  }
-};
-
-module.exports = model;
-
-*/
-
 module.exports = function (name, n) {
   if (type.isEmpty(n.store[name])) n.store[name] = [];
 
@@ -172,11 +23,126 @@ module.exports = function (name, n) {
 
   this.push = function (data) {
     if (type.isEmpty(n.store[name])) n.store[name] = [];
-    if (type.isArray(n.store[name])) n.store[name].push(data);
-    else throw new Error('Model ' + name + ' is not array.');
+    if (type.isArray(n.store[name])) {
+      n.store[name].push(data);
+      return this;
+    } else throw new Error('Model ' + name + ' is not array.');
   };
 
+  this.pop = function () {
+    if (type.isArray(n.store[name])) {
+      n.store[name].pop();
+      return this;
+    } else throw new Error('Model ' + name + ' is not array.');
+  };
 
+  this.shift = function () {
+    if (type.isArray(n.store[name])) {
+      n.store[name].shift();
+      return this;
+    } else throw new Error('Model ' + name + ' is not array.');
+  };
 
+  this.sort = function (by) {
+    if (type.isEmpty(by)) throw new Error('Can\'t sort \'' + name + '\' by undefined param.');
+    else {
+      var ret = n.store[name].sort(function (a, b) {
+        if (a[by] > b[by]) return 1;
+        if (a[by] < b[by]) return -1;
+        return 0;
+      });
+      n.store[name] = ret;
+      return this;
+    }
+  };
+
+  this.reverse = function () {
+    n.store[name] = n.store[name].reverse();
+    return this;
+  };
+
+  this.size = function (name) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else return n.store[name].length;
+  };
+
+  this.keys = function () {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else return Object.keys(name.store[name][0]);
+  };
+
+  this.length = function () {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else return n.store[name].length;
+  };
+
+  this.delete = function () {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else delete n.store[name];
+  };
+
+  this.remove = function (data) {
+    if (type.isEmpty(data)) n.store[name] = [];
+    else if (type.isNumber(data)) {
+      n.store[name].splice(data, 1);
+    } else if (typeof data === 'object') {
+      var keys = Object.keys(data);
+      var res =  n.store[name].filter(function (e) {
+        var chck = true;
+        keys.forEach(function (k) {
+          if (typeof e[k] === 'string') {
+            if(e[k].indexOf(data[k]) >= 0) chck = false;
+          } else {
+            if(e[k] === data[k]) chck = false;
+          }
+        });
+        return chck;
+      });
+      n.store[name] = res;
+    }
+    return this;
+  };
+
+  this.clear = function () {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    n.store[name] = [];
+    return this;
+  };
+
+  this.index = function (index) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    return n.store[name][index];
+  };
+
+  this.first = function () {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    return n.store[name][0];
+  };
+
+  this.last = function () {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    return n.store[name][n.store[name].length-1];
+  };
+
+  this.filter = function (obj) {
+    if (type.isEmpty(name.store[name])) throw new Error('Model \'' + name + '\' does not exists.');
+    else if (type.isEmpty(obj) && typeof obj !== 'object') throw new Error('Find in \'' + name + '\' need a object.');
+    else {
+      var keys = Object.keys(obj);
+      var data =  n.store[name].filter(function (e) {
+        var chck = true;
+        keys.forEach(function (k) {
+          if (typeof e[k] === 'string') {
+            if(e[k].toLowerCase().indexOf(obj[k].toLowerCase()) < 0) chck = false;
+          } else {
+            if(e[k] !== obj[k]) chck = false;
+          }
+        });
+        return chck;
+      });
+
+      return data;
+    }
+  };
 
 };
