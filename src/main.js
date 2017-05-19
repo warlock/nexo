@@ -30,12 +30,12 @@ var n = {
       if (type.isObject(object)) {
         object.name = name;
         n.component[name] = object;
-        n.model.create(name, []);
+        n.model.set(name);
       } else throw new Error('Need a object for create a component.');
     } else if (type.isObject(name)) {
       object = name;
       n.component[object.name] = object;
-      n.model.create(object.name, []);
+      n.model.set(object.name);
     } else throw new Error('Need a parameters for create a component.');
   },
   "render": function (name, data) {
@@ -46,10 +46,9 @@ var n = {
       if (type.isEmpty(n.component[name].html)) throw new Error('The component ' + name + ' no have a valid html.');
       else return n.comp.render(n, name);
     } else {
-      if (!type.isEmpty(data.status)) {
-        n.model.create(name, data.status);
-      }
-      if (!type.isEmpty(data.element)) {
+      if (!type.isEmpty(data.status)) n.model.set(name, data.status);
+
+      if (type.isEmpty(data.element)) {
         return n.comp.render(n, name);
       } else {
         n.comp.render(n, name, data.element);

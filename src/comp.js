@@ -7,21 +7,24 @@ var comp = {
   "render": function (n, name, element) {
     if (!type.isEmpty(n.component[name].load) && type.isFunction(n.component[name].load)) {
       var randId = comp.rand();
+
       var cont = function (data) {
         n.model.set(name, data);
-        document.getElementById(randId).innerHTML = n.component[name].html(n);
+        document.getElementById(randId).outerHTML = n.component[name].html(n);
         if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.component[name].ready(n);
       };
 
-      if (!type.isEmpty(element)) {
-        n.component[name].load(n, cont);
+      if (type.isEmpty(element)) {
+        setTimeout(function () {
+          n.component[name].load(n, cont);
+        });
         return "<div id=\"" + randId + "\">";
       } else {
         document.querySelector(element).innerHTML = "<div id=\"" + randId + "\">";
         n.component[name].load(n, cont);
       }
     } else {
-      if (!type.isEmpty(element)) {
+      if (type.isEmpty(element)) {
         if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.stack.push(n.component[name].ready);
         return n.component[name].html(n);
       } else {

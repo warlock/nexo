@@ -10,8 +10,11 @@
   <script>
 
 n.set({
+  load : (n, done) => {
+    done(n.model.get('client')[0].toUpperCase())
+  },
   name : "client",
-  html : n => `INFO: ${JSON.stringify(n.model.get('client'))}`
+  html : n => `CLIENT INFO: ${JSON.stringify(n.model.get('client'))}`
 })
 
 n.set({
@@ -35,7 +38,7 @@ n.set({
     }, 3000)
   },
   html : n => `INFO: ${JSON.stringify(n.model.get('loaddemo2'))}<br>
-    Aixo es el client: ${n.render('client')}
+    Aixo es el client: ${n.render('client', { status : 'asdasd' })}
   `,
   ready : n => {
     console.log(JSON.stringify(n.model.get('loaddemo2')))
