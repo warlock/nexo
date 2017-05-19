@@ -12,13 +12,25 @@ var n = {
   "events": {},
   "cookies": cookies,
   "getParams": params,
-  "model": model,
+  //"model": model,
+  "data": {},
+  "model": function (name) {
+    return model;
+  },
   "empty": function (val) {
     return val === undefined || val === null || val === '';
   },
   "get": function (element) {
     if (type.isEmpty(element)) throw new Error('Can get this element');
     else return document.querySelector(element);
+  },
+  "id": function (element) {
+    if (type.isEmpty(element)) throw new Error('Can get this element id.');
+    else return document.getElementById(element);
+  },
+  "class": function (element) {
+    if (type.isEmpty(element)) throw new Error('Can get this element class.');
+    else return document.getElementsByClassName(element);
   },
   "run": function () {
     for (var i = 0; i < n.stack.length; i++) n.stack[i](n);

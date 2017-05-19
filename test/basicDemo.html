@@ -35,10 +35,10 @@ n.set({
   load : (n, cont) => {
     setTimeout(() => {
       cont('load2: ' + n.model.get('loaddemo2'))
-    }, 3000)
+    }, 2000)
   },
   html : n => `INFO: ${JSON.stringify(n.model.get('loaddemo2'))}<br>
-    Aixo es el client: ${n.render('client', { status : 'asdasd' })}
+    This is the client: ${n.render('client', { status : 'asdasd' })}
   `,
   ready : n => {
     console.log(JSON.stringify(n.model.get('loaddemo2')))
@@ -48,7 +48,7 @@ n.set({
 
 n.ready(() => {
   console.log('bu')
-  //n.render('client', { element : '.main2', status : "holaaaa" })
+  n.render('client', { element : '.main2', status : "holaaaa" })
   n.render('loaddemo2', { element : '#main', status : "adeu" })
 })
   </script>

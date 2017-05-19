@@ -11,23 +11,23 @@
 
 n.set({
   name : "article",
-  html : (n, article) => `
-  <div><strong>TITLE: ${article.title}</strong><br>
-  ${n.get('articleContent', article.content)}
+  html : n => `
+  <div><strong>TITLE: ${n.model.get('article').title}</strong><br>
+  ${n.get('articleContent', n.model.get('article').title)}
   </div>`
 })
 
 n.set({
   name : "articleContent",
-  load : (n, content, render) => {
+  load : (n, render) => {
     setTimeout(() => {
-      render(content.toUpperCase())
+      render(n.model('articleContent').toUpperCase())
     }, 2000)
   },
-  html : (n, content) => `<div id="${content}">${content}</div>`,
-  ready : (n, content) => {
-    n.on(n.id(content), 'click', () => {
-      console.log(`Clicked: ${content}`)
+  html : n => `<div id="articleContent">${n.model.get('articleContent')}</div>`,
+  ready : n => {
+    n.on(n.id('articleContent'), 'click', () => {
+      console.log(`Clicked: ${n.model.get('articleContent')}`)
     })
   }
 })
@@ -35,7 +35,7 @@ n.set({
 
 n.set({
   name: 'fetchNews',
-  load: (n, data, render) => {
+  load: (n, render) => {
     console.log(`Fetch data from url: ${data}`)
     setTimeout(() => {
       var recibedArticles = [
@@ -46,10 +46,10 @@ n.set({
       render(recibedArticles)
     }, 2000)
   },
-  html : (n, data) => {
-    var text = `<div>LATEST NEWS(${data.length}):</div>`
+  html : n => {
+    var text = `<div>LATEST NEWS(${n.model.get('fetchNews').length}):</div>`
     data.forEach(article => {
-      text += `<div>${n.get('article', article)}</div>`
+      text += `<div>${n.get('article', { status : article })}</div>`
     })
     return text
   },
