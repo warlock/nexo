@@ -12,7 +12,6 @@ var n = {
   "events": {},
   "cookies": cookies,
   "getParams": params,
-  //"model": model,
   "store": {},
   "model": function (name) {
     if (type.isEmpty(name) && !type.isString(name)) throw new Error('Model without name.');
@@ -43,23 +42,19 @@ var n = {
       if (type.isObject(object)) {
         object.name = name;
         n.component[name] = object;
-//        n.model.set(name);
       } else throw new Error('Need a object for create a component.');
     } else if (type.isObject(name)) {
       object = name;
       n.component[object.name] = object;
-//      n.model.set(object.name);
     } else throw new Error('Need a parameters for create a component.');
   },
   "render": function (name, data) {
-    //render component
     if (type.isEmpty(name)) throw new Error('Need a valid name component');
     else if (type.isEmpty(n.component[name])) throw new Error('The component ' + name + ' no exists.');
     else if (type.isEmpty(data)) {
       if (type.isEmpty(n.component[name].html)) throw new Error('The component ' + name + ' no have a valid html.');
       else return n.comp.render(n, name);
     } else {
-      //if (!type.isEmpty(data.status)) n.model.set(name, data.status);
       if (!type.isEmpty(data.status)) n.store[name] = data.status;
 
       if (type.isEmpty(data.element)) {
