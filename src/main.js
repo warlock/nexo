@@ -67,7 +67,6 @@ var n = {
       } else {
         n.comp.render(n, name, data.element);
       }
-      n.run();
     }
   },
   "load": function (comps) {

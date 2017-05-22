@@ -12,6 +12,7 @@ var comp = {
         n.model(name).set(data);
         document.getElementById(randId).outerHTML = n.component[name].html(n);
         if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.component[name].ready(n);
+        n.run();
       };
 
       if (type.isEmpty(element)) {
@@ -30,6 +31,7 @@ var comp = {
       } else {
         document.querySelector(element).innerHTML = n.component[name].html(n);
         if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.stack.push(n.component[name].ready);
+        n.run();
       }
     }
   }
