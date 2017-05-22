@@ -20,4 +20,4 @@ module.exports = function () {
       return params;
     } else return {};
   } else return {};
-}
+};

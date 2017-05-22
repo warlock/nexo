@@ -9,7 +9,6 @@ var comp = {
       var randId = comp.rand();
 
       var cont = function (data) {
-        //n.model.set(name, data);
         n.model(name).set(data);
         document.getElementById(randId).outerHTML = n.component[name].html(n);
         if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.component[name].ready(n);
