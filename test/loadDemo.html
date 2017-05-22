@@ -59,7 +59,7 @@ n.set({
 })
 
 n.ready(() => {
-  n.render('fetchNews', 'main4', 'http://url')
+  n.render('fetchNews', '#main4', 'http://url')
 
   n.on('.main2', 'click', () => {
     n.emit('eventTest', 'from ready function')

@@ -19,9 +19,9 @@ n.set({
 
 n.set({
   name : "loaddemo",
-  load : (n, cont) => {
+  load : (n, render) => {
     setTimeout(() => {
-      cont('load: ' + n.model('loaddemo').get())
+      render('load: ' + n.model('loaddemo').get())
     }, 3000)
   },
   html : n => `INFO: ${n.model('loaddemo').get()}`,
@@ -32,9 +32,9 @@ n.set({
 
 n.set({
   name : "loaddemo2",
-  load : (n, cont) => {
+  load : (n, render) => {
     setTimeout(() => {
-      cont('load2: ' + n.model('loaddemo2').get())
+      render('load2: ' + n.model('loaddemo2').get())
     }, 2000)
   },
   html : n => `INFO: ${n.model('loaddemo2').get()}<br>

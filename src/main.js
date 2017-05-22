@@ -8,7 +8,7 @@ var n = {
   "comp": comp,
   "component": {},
   "stack": [],
-  //"relations": {}, // RELATIONS FOR MODELS
+  "relations": {},
   "events": {},
   "cookies": cookies,
   "getParams": params,
