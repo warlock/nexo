@@ -10,23 +10,24 @@
   <script>
 
 n.set({
-  load : (n, done) => {
-    done(n.model('client').get().toUpperCase())
+  load : (n, render) => {
+    console.log(JSON.stringify(n.data))
+    render(n.data.toUpperCase())
   },
   name : "client",
-  html : n => `CLIENT INFO: ${n.model('client').get()}`
+  html : n => `CLIENT INFO: ${n.data}`
 })
 
 n.set({
   name : "loaddemo",
   load : (n, render) => {
     setTimeout(() => {
-      render('load: ' + n.model('loaddemo').get())
+      render('load: ' + n.data)
     }, 3000)
   },
-  html : n => `INFO: ${n.model('loaddemo').get()}`,
+  html : n => `INFO: ${n.data}`,
   ready : n => {
-    console.log(n.model('loaddemo').get())
+    console.log(n.data)
   }
 })
 
@@ -34,24 +35,25 @@ n.set({
   name : "loaddemo2",
   load : (n, render) => {
     setTimeout(() => {
-      render('load2: ' + n.model('loaddemo2').get())
+      render('load2: ' + n.data)
     }, 2000)
   },
-  html : n => `INFO: ${n.model('loaddemo2').get()}<br>
-    This is the client: ${n.render('client', { status : 'asdasd' })}
+  html : n => `INFO: ${n.data}<br>
+    This is the client: ${n.render('client', { data : 'name of client' })}
   `,
   ready : n => {
-    if (n.model('loaddemo2').get() !== 'holaaas') {
-      console.log('Cambiant el loaddemo2 model... i tornant a renderitzar a... main4')
-      n.model('loaddemo2').set('holaaas').render('main4')
-    } else console.log("No s'ha de cambiar")
+    if (n.model('test').get() === 1) {
+      console.log('Change model and render in main4')
+      n.model('test').set(2).render("loaddemo2", '#main4')
+    } else console.log("No need changes")
   }
 })
 
 
 n.ready(() => {
-  n.render('client', { element : '.main2', status : "holaaaa" })
-  n.render('loaddemo2', { element : '#main', status : "adeu" })
+  n.model('test').set(1)
+  n.render('client', { element : '.main2', data : "hello" })
+  n.render('loaddemo2', { element : '#main', data : "bye" })
 })
   </script>
 </body>

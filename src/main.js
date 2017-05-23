@@ -51,7 +51,7 @@ var n = {
       if (type.isEmpty(n.component[name].html)) throw new Error('The component ' + name + ' no have a valid html.');
       else return n.comp.render(n, name);
     } else {
-      if (!type.isEmpty(data.state)) n.component[name].state = data.state;
+      if (!type.isEmpty(data.data)) n.component[name].data = data.data;
 
       if (type.isEmpty(data.element)) {
         return n.comp.render(n, name);

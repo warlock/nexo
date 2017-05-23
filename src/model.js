@@ -7,13 +7,11 @@ module.exports = function (name, n) {
     return n.store[name];
   };
 
-  this.render = function (element) {
-    if (type.isEmpty(element)) {
-      throw Error("Autorender not implemented yet");
-    } else {
-      document.getElementById(element).innerHTML = n.component[name].html(n);
-      n.component[name].ready(n);
-    }
+  this.render = function (compName, element) {
+    n.render(compName, {
+      "element": element,
+      "data": n.store[name]
+    });
   };
 
   this.set = function (data) {

@@ -6,7 +6,7 @@ var comp = {
   },
   "render": function (n, name, element) {
     var ret = {
-      "state": n.component[name].state,
+      "data": n.component[name].data,
       "on": n.on,
       "id": n.id,
       "class": n.class,
@@ -25,7 +25,7 @@ var comp = {
       var randId = comp.rand();
 
       var cont = function (data) {
-        ret.state = data;
+        ret.data = data;
         document.getElementById(randId).outerHTML = n.component[name].html(ret);
         if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.component[name].ready(ret);
         for (var i = 0; i < n.stack.length; i++) n.stack[i](ret);
