@@ -41,7 +41,9 @@ var comp = {
       }
     } else {
       if (type.isEmpty(element)) {
-        if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.component[name].ready(ret);
+        setTimeout(function () {
+          if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.component[name].ready(ret);
+        });
         return n.component[name].html(ret);
       } else {
         document.querySelector(element).innerHTML = n.component[name].html(n);

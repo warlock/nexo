@@ -4,7 +4,7 @@
 </head>
 <body>
   <div id="main"></div>
-  <div class="main2">clickme</div>
+  <div class="main2">CLICK FOR SEND AN EVENT</div>
   <div id="main3"></div>
   <div id="main4"></div>
   <script>
@@ -21,7 +21,7 @@ n.set({
   ready : n => {
     console.log('llença ready')
     n.on(n.id(n.data.id), 'click', () => {
-      console.log(`Clicked: ${n.data}`)
+      console.log(`Clicked: ${n.data.title}`)
     })
   }
 })
@@ -52,7 +52,6 @@ n.set({
   html : n => {
     var text = `<div>LATEST NEWS(${n.data.length}):</div>`
     n.data.forEach(article => {
-      console.log(article.id)
       text += `<div>${n.render('article', { data : article })}</div>`
     })
     return text
