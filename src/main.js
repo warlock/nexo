@@ -32,10 +32,13 @@ var n = {
     if (type.isEmpty(element)) throw new Error('Can get this element class.');
     else return document.getElementsByClassName(element);
   },
+
+  /*
   "run": function () {
     for (var i = 0; i < n.stack.length; i++) n.stack[i](n);
     n.stack = [];
   },
+  */
   "set": function (name, object) {
     if (type.isEmpty(name)) throw new Error('Need a name or object for create a component');
     else if (type.isString(name)) {
@@ -55,7 +58,7 @@ var n = {
       if (type.isEmpty(n.component[name].html)) throw new Error('The component ' + name + ' no have a valid html.');
       else return n.comp.render(n, name);
     } else {
-      if (!type.isEmpty(data.status)) n.store[name] = data.status;
+      if (!type.isEmpty(data.state)) n.component[name].state = data.state;
 
       if (type.isEmpty(data.element)) {
         return n.comp.render(n, name);
