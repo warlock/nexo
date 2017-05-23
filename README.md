@@ -37,16 +37,17 @@ const n = require("nexo")
 ```javascript
 n.set({
   name : 'button',
-  html : n => `<b id="click_now">Clickme ${n.model('button').get()}!</b>`,
+  html : n => `<button id="click_now">Clickme ${n.data}!</button>`,
   ready : n => {
     n.on('#click_now', 'click', () => {
-      console.log(`Hi! ${n.model('button').get()}`)
+      console.log(`Hi! ${n.model('name').get()}`)
     })
   }
 })
 
 n.ready(() => {
-  n.render('button', { element : '#main_div', status : 'Now' })
+  n.model('name').set('Nexo')
+  n.render('button', { element : '#main_div', data : 'Now' })
 })
 ```
 
