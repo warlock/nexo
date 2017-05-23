@@ -7,7 +7,6 @@ var comp = require('./comp');
 var n = {
   "comp": comp,
   "component": {},
-  "stack": [],
   "relations": {},
   "events": {},
   "cookies": cookies,
@@ -74,16 +73,16 @@ var n = {
   },
   "emit": function (ev, data) {
     if (type.isEmpty(ev)) throw new Error('No event selected.');
-    else if (ev instanceof Array) {
+    else if (type.isArray(ev)) {
       for (var i = 0; i < ev.length; i++) {
-        if (!type.isEmpty(n.events[ev[i]]) && typeof n.events[ev[i]] === 'function') n.events[ev[i]](data);
+        if (!type.isEmpty(n.events[ev[i]]) && type.isFunction(n.events[ev[i]])) n.events[ev[i]](data);
       }
-    } else if (!type.isEmpty(n.events[ev]) && typeof n.events[ev] === 'function') n.events[ev](data);
+    } else if (!type.isEmpty(n.events[ev]) && type.isFunction(n.events[ev])) n.events[ev](data);
   },
   "on": function (obj, eventHandler, callback) {
     if (type.isEmpty(obj)) throw new Error('Event without objective');
     else {
-      if (typeof obj === "string" || obj instanceof String) {
+      if (type.isString(obj)) {
         if (obj[0] === '#') {
           var nid = document.getElementById(obj.slice(1,obj.length));
           nid.addEventListener(eventHandler, callback);
@@ -93,7 +92,7 @@ var n = {
             ncl[ic].addEventListener(eventHandler, callback);
           }
         } else {
-          if (type.isEmpty(eventHandler) || typeof eventHandler !== 'function') throw new Error('Event needs a function');
+          if (type.isEmpty(eventHandler) || !type.isFunction(eventHandler)) throw new Error('Event needs a function');
           else n.events[obj] = eventHandler;
         }
       } else {

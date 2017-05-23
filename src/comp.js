@@ -28,8 +28,6 @@ var comp = {
         ret.data = data;
         document.getElementById(randId).outerHTML = n.component[name].html(ret);
         if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.component[name].ready(ret);
-        for (var i = 0; i < n.stack.length; i++) n.stack[i](ret);
-        n.stack = [];
       };
 
       if (type.isEmpty(element)) {
@@ -43,13 +41,11 @@ var comp = {
       }
     } else {
       if (type.isEmpty(element)) {
-        if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.stack.push(n.component[name].ready);
+        if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.component[name].ready(ret);
         return n.component[name].html(ret);
       } else {
         document.querySelector(element).innerHTML = n.component[name].html(n);
-        if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.stack.push(n.component[name].ready);
-        for (var i = 0; i < n.stack.length; i++) n.stack[i](ret);
-        n.stack = [];
+        if (!type.isEmpty(n.component[name].ready) && type.isFunction(n.component[name].ready)) n.component[name].ready(ret);
       }
     }
   }

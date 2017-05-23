@@ -11,11 +11,15 @@
 
 n.set({
   name : "article",
-  html : n => `
+  html : n => {
+    console.log('pinta html')
+    return `
   <div><strong id="${n.data.id}">TITLE: ${n.data.title}</strong><br>
-  ${n.render('articleContent', { data : n.data.content })}
-  </div>`,
+  ${n.render('content', { data : n.data.content })}
+  </div>`
+},
   ready : n => {
+    console.log('llença ready')
     n.on(n.id(n.data.id), 'click', () => {
       console.log(`Clicked: ${n.data}`)
     })
@@ -23,13 +27,13 @@ n.set({
 })
 
 n.set({
-  name : "articleContent",
+  name : "content",
   load : (n, render) => {
     setTimeout(() => {
-      render(n.data.toUpperCase())
-    }, 2000)
+      render(n.data.toLowerCase())
+    }, 20000)
   },
-  html : n => `<div id="${n.data}">${n.data}</div>`
+  html : n => `<div>${n.data}</div>`
 })
 
 n.set({
@@ -38,8 +42,8 @@ n.set({
     console.log(`Fetch data from url: ${n.data}`)
     setTimeout(() => {
       var recibedArticles = [
-        { id : "1", title : "Title 1", content : 'aaa'},
-        { id : "2", title : "Title 2", content : 'bbb'}
+        { id : "1", title : "Title 1", content : 'CONTENT 1'},
+        { id : "2", title : "Title 2", content : 'CONTENT 2'}
       ]
 
       render(recibedArticles)
@@ -48,8 +52,8 @@ n.set({
   html : n => {
     var text = `<div>LATEST NEWS(${n.data.length}):</div>`
     n.data.forEach(article => {
-      text += `
-      <div>${n.render('article', { data : article })}</div>`
+      console.log(article.id)
+      text += `<div>${n.render('article', { data : article })}</div>`
     })
     return text
   },
