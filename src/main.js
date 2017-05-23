@@ -32,13 +32,6 @@ var n = {
     if (type.isEmpty(element)) throw new Error('Can get this element class.');
     else return document.getElementsByClassName(element);
   },
-
-  /*
-  "run": function () {
-    for (var i = 0; i < n.stack.length; i++) n.stack[i](n);
-    n.stack = [];
-  },
-  */
   "set": function (name, object) {
     if (type.isEmpty(name)) throw new Error('Need a name or object for create a component');
     else if (type.isString(name)) {
