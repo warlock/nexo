@@ -4,62 +4,69 @@
 </head>
 <body>
   <div id="main"></div>
-  <div class="main2">clickme</div>
+  <div class="main2">CLICK FOR SEND AN EVENT</div>
   <div id="main3"></div>
   <div id="main4"></div>
   <script>
 
 n.set({
   name : "article",
-  html : (n, article) => `
-  <div><strong>TITLE: ${article.title}</strong><br>
-  ${n.get('articleContent', article.content)}
+  html : n => {
+    console.log('pinta html')
+    return `
+  <div><strong id="${n.data.id}">TITLE: ${n.data.title}</strong><br>
+  ${n.render('content', { data : n.data.content })}
   </div>`
-})
-
-n.set({
-  name : "articleContent",
-  load : (n, content, render) => {
-    setTimeout(() => {
-      render(content.toUpperCase())
-    }, 2000)
-  },
-  html : (n, content) => `<div id="${content}">${content}</div>`,
-  ready : (n, content) => {
-    n.on(n.id(content), 'click', () => {
-      console.log(`Clicked: ${content}`)
+},
+  ready : n => {
+    console.log('llença ready')
+    n.on(n.id(n.data.id), 'click', () => {
+      console.log(`Clicked: ${n.data.title}`)
     })
   }
 })
 
+n.set({
+  name : "content",
+  load : (n, render) => {
+    setTimeout(() => {
+      render(n.data.toLowerCase())
+    }, 20000)
+  },
+  html : n => `<div>${n.data}</div>`
+})
 
 n.set({
   name: 'fetchNews',
-  load: (n, data, render) => {
-    console.log(`Fetch data from url: ${data}`)
+  load: (n, render) => {
+    console.log(`Fetch data from url: ${n.data}`)
     setTimeout(() => {
       var recibedArticles = [
-        { title : "Title 1", content : 'aaa'},
-        { title : "Title 2", content : 'bbb'}
+        { id : "1", title : "Title 1", content : 'CONTENT 1'},
+        { id : "2", title : "Title 2", content : 'CONTENT 2'}
       ]
 
       render(recibedArticles)
     }, 2000)
   },
-  html : (n, data) => {
-    var text = `<div>LATEST NEWS(${data.length}):</div>`
-    data.forEach(article => {
-      text += `<div>${n.get('article', article)}</div>`
+  html : n => {
+    var text = `<div>LATEST NEWS(${n.data.length}):</div>`
+    n.data.forEach(article => {
+      text += `<div>${n.render('article', { data : article })}</div>`
     })
     return text
   },
   ready : (n, data) => {
-    console.log(`Fetch ${data.length} articles.`)
+    console.log(`Fetch ${n.data.length} articles.`)
   }
 })
 
+n.on('eventTest', text => {
+  console.log(text)
+})
+
 n.ready(() => {
-  n.render('fetchNews', 'main4', 'http://url')
+  n.render('fetchNews', { element : '#main4', data : 'http://url' })
 
   n.on('.main2', 'click', () => {
     n.emit('eventTest', 'from ready function')
