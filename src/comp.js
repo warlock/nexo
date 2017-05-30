@@ -6,7 +6,7 @@ var comp = {
   },
   "render": function (n, name, element) {
     var ret = {
-      "data": n.component[name].data,
+      "data": n.component[name].data || null,
       "on": n.on,
       "id": n.id,
       "class": n.class,
