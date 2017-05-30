@@ -44,10 +44,10 @@ var n = {
     } else throw new Error('Need a parameters for create a component.');
   },
   "render": function (name, data) {
-    if (type.isEmpty(name)) throw new Error('Need a valid name component');
-    else if (type.isEmpty(n.component[name])) throw new Error('The component ' + name + ' no exists.');
+    if (type.isEmpty(name) && !type.isString(name)) throw new Error('Need a valid name component');
+    else if (type.isEmpty(n.component[name])) throw new Error('The component \'' + name + '\' no exists.');
     else if (type.isEmpty(data)) {
-      if (type.isEmpty(n.component[name].html)) throw new Error('The component ' + name + ' no have a valid html.');
+      if (type.isEmpty(n.component[name].html)) throw new Error('The component \'' + name + '\' no have a valid html.');
       else return n.comp.render(n, name);
     } else {
       if (!type.isEmpty(data.data)) n.component[name].data = data.data;
