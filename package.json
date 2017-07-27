@@ -10,11 +10,42 @@
     "type": "git",
     "url": "git+https://github.com/warlock/nexo.git"
   },
-  "keywords": ["frontend","client-side", "browser", "framework", "angular", "component", "components", "framework","gui","form","website","model","website"],
+  "keywords": [
+    "frontend",
+    "client-side",
+    "browser",
+    "framework",
+    "angular",
+    "component",
+    "components",
+    "framework",
+    "gui",
+    "form",
+    "website",
+    "model",
+    "website"
+  ],
   "author": "Josep Subils <js@js.gl> (http://js.gl)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/warlock/nexo/issues"
   },
-  "homepage": "https://nexo.js.gl"
+  "homepage": "https://nexo.js.gl",
+  "devDependencies": {
+    "babel-core": "^6.25.0",
+    "babel-eslint": "^7.2.3",
+    "babel-loader": "^7.1.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "babel-register": "^6.24.1",
+    "eslint": "^4.3.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-friendly-formatter": "^3.0.0",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-html": "^3.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "webpack": "^3.4.1"
+  }
 }

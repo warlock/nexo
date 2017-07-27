@@ -1,1 +1,326 @@
-!function(t,e){"object"==typeof exports&&"object"==typeof module?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.n=e():t.n=e()}(this,function(){return function(t){function e(r){if(n[r])return n[r].exports;var o=n[r]={i:r,l:!1,exports:{}};return t[r].call(o.exports,o,o.exports,e),o.l=!0,o.exports}var n={};return e.m=t,e.c=n,e.d=function(t,n,r){e.o(t,n)||Object.defineProperty(t,n,{configurable:!1,enumerable:!0,get:r})},e.n=function(t){var n=t&&t.__esModule?function(){return t.default}:function(){return t};return e.d(n,"a",n),n},e.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},e.p="",e(e.s=1)}([function(t,e){t.exports={isFunction:function(t){return"function"==typeof t},isArray:function(t){return"object"==typeof t&&t instanceof Array},isObject:function(t){return"object"==typeof t&&!(t instanceof Array)&&null!==t},isNumber:function(t){return"number"==typeof t||t instanceof Number},isString:function(t){return"string"==typeof t||t instanceof String},isBoolean:function(t){return"boolean"==typeof t},isInteger:function(t){return!!this.isNumber(t)&&t%1==0},isEmpty:function(t){return null===t||""===t||void 0===t},isNull:function(t){return null===t},isNaN:function(t){return isNaN(t)},isUndefined:function(t){return void 0===t}}},function(t,e,n){var r=n(2),o=n(0),i=n(3),s=n(4),c=n(5),u={comp:c,component:{},relations:{},events:{},cookies:r,getParams:i,store:{},model:function(t){if(o.isEmpty(t)&&!o.isString(t))throw new Error("Model without name.");return new s(t,u)},empty:function(t){return void 0===t||null===t||""===t},get:function(t){if(o.isEmpty(t))throw new Error("Can get this element");return document.querySelector(t)},id:function(t){if(o.isEmpty(t))throw new Error("Can get this element id.");return document.getElementById(t)},class:function(t){if(o.isEmpty(t))throw new Error("Can get this element class.");return document.getElementsByClassName(t)},set:function(t,e){if(o.isEmpty(t))throw new Error("Need a name or object for create a component");if(o.isString(t)){if(!o.isObject(e))throw new Error("Need a object for create a component.");e.name=t,u.component[t]=e}else{if(!o.isObject(t))throw new Error("Need a parameters for create a component.");e=t,u.component[e.name]=e}},render:function(t,e){if(o.isEmpty(t)&&!o.isString(t))throw new Error("Need a valid name component");if(o.isEmpty(u.component[t]))throw new Error("The component '"+t+"' no exists.");if(o.isEmpty(e)){if(o.isEmpty(u.component[t].html))throw new Error("The component '"+t+"' no have a valid html.");return u.comp.render(u,t)}if(o.isEmpty(e.data)||(u.component[t].data=e.data),o.isEmpty(e.element))return u.comp.render(u,t);u.comp.render(u,t,e.element)},load:function(t){if(!o.isEmpty(t))if(o.isArray(t))for(var e=0;e<t.length;e++)u.set(t[e]);else u.set(t)},destroy:function(t){if(o.isEmpty(t))throw new Error("Destroy without objective");document.querySelector(t).innerHTML=""},emit:function(t,e){if(o.isEmpty(t))throw new Error("No event selected.");if(o.isArray(t))for(var n=0;n<t.length;n++)!o.isEmpty(u.events[t[n]])&&o.isFunction(u.events[t[n]])&&u.events[t[n]](e);else!o.isEmpty(u.events[t])&&o.isFunction(u.events[t])&&u.events[t](e)},on:function(t,e,n){if(o.isEmpty(t))throw new Error("Event without objective");if(o.isString(t))if("#"===t[0]){var r=document.getElementById(t.slice(1,t.length));r.addEventListener(e,n)}else if("."===t[0])for(var i=document.getElementsByClassName(t.slice(1,t.length)),s=0;s<i.length;s++)i[s].addEventListener(e,n);else{if(o.isEmpty(e)||!o.isFunction(e))throw new Error("Event needs a function");u.events[t]=e}else{if(o.isEmpty(e))throw new Error("Event without event handler");if(o.isEmpty(n))throw new Error("Event without function");if(Array.isArray(t))for(var c=0;c<t.length;c++)t[c].addEventListener(e,n);else t.addEventListener(e,n)}},ready:function(t){document.addEventListener("DOMContentLoaded",t)}};u.params=u.getParams(),t.exports=u},function(t,e){t.exports={set:function(t,e,n){var r=new Date;r.setTime(r.getTime()+24*n*60*60*1e3);var o="expires="+r.toUTCString();document.cookie=t+"="+e+";"+o+";path=/"},get:function(t){var e="";return document.cookie.split("; ").forEach(function(n){var r=n.split("=");r[0]===t&&(e=r[1])}),e}}},function(t,e,n){var r=n(0);t.exports=function(){var t=window.location.search;if(r.isEmpty(t))return{};t=t.substring(1);var e=t.split("&");if(e.length>0){var n={};return e.forEach(function(t){if(!r.isEmpty(t)){var e=t.split("=");r.isEmpty(e[0])||r.isEmpty(e[0].trim())||r.isEmpty(e[1])||(e[1]=e[1].trim(),e[1]=decodeURIComponent(e[1]).trim(),r.isEmpty(e[1])||(n[e[0].trim()]=e[1]))}}),n}return{}}},function(t,e,n){var r=n(0);t.exports=function(t,e){r.isEmpty(e.store[t])&&(e.store[t]=[]),this.get=function(){return e.store[t]},this.render=function(n,r){e.render(n,{element:r,data:e.store[t]})},this.set=function(n){return r.isEmpty(n)||(e.store[t]=n),this},this.push=function(n){if(r.isEmpty(e.store[t])&&(e.store[t]=[]),r.isArray(e.store[t]))return e.store[t].push(n),this;throw new Error("Model "+t+" is not array.")},this.pop=function(){if(r.isArray(e.store[t]))return e.store[t].pop(),this;throw new Error("Model "+t+" is not array.")},this.shift=function(){if(r.isArray(e.store[t]))return e.store[t].shift(),this;throw new Error("Model "+t+" is not array.")},this.sort=function(n){if(r.isEmpty(n))throw new Error("Can't sort '"+t+"' by undefined param.");var o=e.store[t].sort(function(t,e){return t[n]>e[n]?1:t[n]<e[n]?-1:0});return e.store[t]=o,this},this.reverse=function(){return e.store[t]=e.store[t].reverse(),this},this.size=function(t){if(r.isEmpty(t.store[t]))throw new Error("Model '"+t+"' does not exists.");return e.store[t].length},this.keys=function(){if(r.isEmpty(t.store[t]))throw new Error("Model '"+t+"' does not exists.");return Object.keys(t.store[t][0])},this.length=function(){if(r.isEmpty(t.store[t]))throw new Error("Model '"+t+"' does not exists.");return e.store[t].length},this.delete=function(){if(r.isEmpty(t.store[t]))throw new Error("Model '"+t+"' does not exists.");delete e.store[t]},this.remove=function(n){if(r.isEmpty(n))e.store[t]=[];else if(r.isNumber(n))e.store[t].splice(n,1);else if("object"==typeof n){var o=Object.keys(n),i=e.store[t].filter(function(t){var e=!0;return o.forEach(function(r){"string"==typeof t[r]?t[r].indexOf(n[r])>=0&&(e=!1):t[r]===n[r]&&(e=!1)}),e});e.store[t]=i}return this},this.clear=function(){if(r.isEmpty(t.store[t]))throw new Error("Model '"+t+"' does not exists.");return e.store[t]=[],this},this.index=function(n){if(r.isEmpty(t.store[t]))throw new Error("Model '"+t+"' does not exists.");return e.store[t][n]},this.first=function(){if(r.isEmpty(t.store[t]))throw new Error("Model '"+t+"' does not exists.");return e.store[t][0]},this.last=function(){if(r.isEmpty(t.store[t]))throw new Error("Model '"+t+"' does not exists.");return e.store[t][e.store[t].length-1]},this.filter=function(n){if(r.isEmpty(t.store[t]))throw new Error("Model '"+t+"' does not exists.");if(r.isEmpty(n)&&"object"!=typeof n)throw new Error("Find in '"+t+"' need a object.");var o=Object.keys(n);return e.store[t].filter(function(t){var e=!0;return o.forEach(function(r){"string"==typeof t[r]?t[r].toLowerCase().indexOf(n[r].toLowerCase())<0&&(e=!1):t[r]!==n[r]&&(e=!1)}),e})}}},function(t,e,n){var r=n(0),o={rand:function(){return Math.random().toString(36).substr(2,10)},render:function(t,e,n){var i={data:t.component[e].data||null,on:t.on,id:t.id,class:t.class,render:t.render,emit:t.emit,get:t.get,empty:t.empty,set:t.set,destroy:t.destroy,params:t.params,cookies:t.cookies,model:t.model};if(!r.isEmpty(t.component[e].load)&&r.isFunction(t.component[e].load)){var s=o.rand(),c=function(n){i.data=n,document.getElementById(s).outerHTML=t.component[e].html(i),!r.isEmpty(t.component[e].ready)&&r.isFunction(t.component[e].ready)&&t.component[e].ready(i)};if(r.isEmpty(n))return setTimeout(function(){t.component[e].load(i,c)}),'<div id="'+s+'">';document.querySelector(n).innerHTML='<div id="'+s+'">',t.component[e].load(i,c)}else{if(r.isEmpty(n))return setTimeout(function(){!r.isEmpty(t.component[e].ready)&&r.isFunction(t.component[e].ready)&&t.component[e].ready(i)}),t.component[e].html(i);document.querySelector(n).innerHTML=t.component[e].html(i),!r.isEmpty(t.component[e].ready)&&r.isFunction(t.component[e].ready)&&t.component[e].ready(i)}}};t.exports=o}])});
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["n"] = factory();
+	else
+		root["n"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+  isFunction: fn => {
+    return typeof fn === 'function'
+  },
+  isArray: obj => {
+    return typeof obj === 'object' && obj instanceof Array
+  },
+  isObject: obj => {
+    return (typeof obj === 'object') && !(obj instanceof Array) && obj !== null
+  },
+  isNumber: obj => {
+    return typeof obj === 'number' || obj instanceof Number
+  },
+  isString: obj => {
+    return typeof obj === 'string' || obj instanceof String
+  },
+  isBoolean: obj => {
+    return typeof obj === 'boolean'
+  },
+  isInteger: obj => {
+    if (this.isNumber(obj)) return obj % 1 === 0
+    else return false
+  },
+  isEmpty: data => {
+    return (data === null || data === '' || data === undefined)
+  },
+  isNull: data => {
+    return data === null
+  },
+  isNaN: data => {
+    return isNaN(data)
+  },
+  isUndefined: data => {
+    return data === undefined
+  }
+});
+
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__type__ = __webpack_require__(0);
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  params () {
+    var paramstr = window.location.search
+    if (!__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(paramstr)) {
+      paramstr = paramstr.substring(1)
+      var parray = paramstr.split('&')
+      if (parray.length > 0) {
+        var params = {}
+        parray.forEach(function (pstr) {
+          if (!__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(pstr)) {
+            var parr = pstr.split('=')
+            if (!__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(parr[0]) && !__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(parr[0].trim()) && !__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(parr[1])) {
+              parr[1] = parr[1].trim()
+              parr[1] = decodeURIComponent(parr[1]).trim()
+              if (!__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(parr[1])) params[parr[0].trim()] = parr[1]
+            }
+          }
+        })
+        return params
+      } else return {}
+    } else return {}
+  },
+  random () {
+    return Math.random().toString(36).substr(2, 10)
+  }
+});
+
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__type__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__cookies__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__tools__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__comp__ = __webpack_require__(4);
+
+
+
+
+
+
+const n = {
+  events: {},
+  store: {},
+  components: {},
+  relations: {},
+  empty: __WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty,
+  cookies: __WEBPACK_IMPORTED_MODULE_1__cookies__["a" /* default */],
+  get: document.querySelector,
+  id: document.getElementById,
+  class: document.getElementsByClassName,
+  comp: __WEBPACK_IMPORTED_MODULE_3__comp__["a" /* default */],
+  getParams () {
+    return __WEBPACK_IMPORTED_MODULE_2__tools__["a" /* default */].params
+  },
+  set (object) {
+    if (__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(object) && !__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isObject(object)) throw new Error('Need object for create a component')
+    else n.components[object.name] = object
+  },
+  load (components) {
+    if (!__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(components)) {
+      if (!__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isArray(components)) {
+        for (var i = 0; i < components.length; i++) n.set(components[i])
+      } else n.set(components)
+    }
+  },
+  emit (ev, data) {
+    if (__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(ev)) throw new Error('No event selected.')
+    else if (__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isArray(ev)) {
+      ev.forEach(trigger => {
+        if (!__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(n.events[trigger]) && __WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isFunction(n.events[trigger])) n.events[trigger](data)
+      })
+    } else if (!__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(n.events[ev]) && __WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isFunction(n.events[ev])) n.events[ev](data)
+  },
+  on (trigger, callback) {
+    if (__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(trigger)) throw new Error('Event without objective')
+    else {
+      if (__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(callback)) throw new Error('Event without function')
+      else {
+        if (__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isArray(trigger)) {
+          trigger.forEach(trig => {
+            n.events[trig] = callback
+          })
+        } else n.events[trigger] = callback
+      }
+    }
+  },
+  ready (callback) {
+    document.addEventListener('DOMContentLoaded', callback)
+  },
+  render (name, data) {
+    if (__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(name) && !__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isString(name)) throw new Error('Need a valid name component')
+    else if (__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(n.components[name])) throw new Error(`The component '${name}' no exists.`)
+    else {
+      n.comp.render(n, 'name', data)
+    }
+  }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (n);
+
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+  set (key, value, exdays) {
+    var d = new Date()
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000))
+    var expires = `expires=${d.toUTCString()}`
+    document.cookie = `${key}=${value};${expires};path=/`
+  },
+  get (key) {
+    var value = ''
+    document.cookie.split('; ').forEach(e => {
+      var x = e.split('=')
+      if (x[0] === key) value = x[1]
+    })
+    return value
+  }
+});
+
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__type__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__tools__ = __webpack_require__(1);
+
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  render (n, name, input) {
+    var randId = __WEBPACK_IMPORTED_MODULE_1__tools__["a" /* default */].random()
+    n.relations[randId] = {
+      name: 'name'
+    }
+
+    if (!__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(input.data)) {
+      n.relations[randId].data = input.data
+    } else n.relations[randId].data = {}
+
+    var ret = {
+      key: randId,
+      data: n.relations[randId].data,
+      on: n.on,
+      id: n.id,
+      class: n.class,
+      render: n.render,
+      emit: n.emit,
+      get: n.get,
+      empty: n.empty,
+      set: n.set,
+      destroy: n.destroy,
+      params: n.params,
+      cookies: n.cookies
+    }
+
+    if (!__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(n.components[name].load) && __WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isFunction(n.components[name].load)) {
+      var cont = data => {
+        n.relations[randId].data = data
+        document.getElementById(randId).outerHTML = n.components[name].html(ret)
+        if (!__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(n.components[name].ready) && __WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isFunction(n.components[name].ready)) n.components[name].ready(ret)
+      }
+
+      if (__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(input.element)) {
+        setTimeout(() => {
+          n.components[name].load(ret, cont)
+        })
+        return `<div id="${randId}">`
+      } else {
+        document.querySelector(input.element).innerHTML = `<div id="${randId}">`
+        n.components[name].load(ret, cont)
+      }
+    } else {
+      if (__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(input.element)) {
+        setTimeout(function () {
+          if (!__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(n.components[name].ready) && __WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isFunction(n.components[name].ready)) n.components[name].ready(ret)
+        })
+        return n.components[name].html(ret)
+      } else {
+        document.querySelector(input.element).innerHTML = n.components[name].html(ret)
+        if (!__WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isEmpty(n.components[name].ready) && __WEBPACK_IMPORTED_MODULE_0__type__["a" /* default */].isFunction(n.components[name].ready)) n.components[name].ready(ret)
+      }
+    }
+  }
+});
+
+
+/***/ })
+/******/ ]);
+});

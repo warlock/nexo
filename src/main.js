@@ -1,116 +1,65 @@
-var cookies = require('./cookies');
-var type = require('./type');
-var params = require('./params');
-var Model = require('./model');
-var comp = require('./comp');
+'use strict'
+import type from './type'
+import cookies from './cookies'
+import tools from './tools'
+import comp from './comp'
 
-var n = {
-  "comp": comp,
-  "component": {},
-  "relations": {},
-  "events": {},
-  "cookies": cookies,
-  "getParams": params,
-  "store": {},
-  "model": function (name) {
-    if (type.isEmpty(name) && !type.isString(name)) throw new Error('Model without name.');
-    else return new Model(name, n);
+const n = {
+  events: {},
+  store: {},
+  components: {},
+  relations: {},
+  empty: type.isEmpty,
+  cookies: cookies,
+  get: document.querySelector,
+  id: document.getElementById,
+  class: document.getElementsByClassName,
+  comp: comp,
+  getParams () {
+    return tools.params
   },
-  "empty": function (val) {
-    return val === undefined || val === null || val === '';
+  set (object) {
+    if (type.isEmpty(object) && !type.isObject(object)) throw new Error('Need object for create a component')
+    else n.components[object.name] = object
   },
-  "get": function (element) {
-    if (type.isEmpty(element)) throw new Error('Can get this element');
-    else return document.querySelector(element);
-  },
-  "id": function (element) {
-    if (type.isEmpty(element)) throw new Error('Can get this element id.');
-    else return document.getElementById(element);
-  },
-  "class": function (element) {
-    if (type.isEmpty(element)) throw new Error('Can get this element class.');
-    else return document.getElementsByClassName(element);
-  },
-  "set": function (name, object) {
-    if (type.isEmpty(name)) throw new Error('Need a name or object for create a component');
-    else if (type.isString(name)) {
-      if (type.isObject(object)) {
-        object.name = name;
-        n.component[name] = object;
-      } else throw new Error('Need a object for create a component.');
-    } else if (type.isObject(name)) {
-      object = name;
-      n.component[object.name] = object;
-    } else throw new Error('Need a parameters for create a component.');
-  },
-  "render": function (name, data) {
-    if (type.isEmpty(name) && !type.isString(name)) throw new Error('Need a valid name component');
-    else if (type.isEmpty(n.component[name])) throw new Error('The component \'' + name + '\' no exists.');
-    else if (type.isEmpty(data)) {
-      if (type.isEmpty(n.component[name].html)) throw new Error('The component \'' + name + '\' no have a valid html.');
-      else return n.comp.render(n, name);
-    } else {
-      if (!type.isEmpty(data.data)) n.component[name].data = data.data;
-
-      if (type.isEmpty(data.element)) {
-        return n.comp.render(n, name);
-      } else {
-        n.comp.render(n, name, data.element);
-      }
+  load (components) {
+    if (!type.isEmpty(components)) {
+      if (!type.isArray(components)) {
+        for (var i = 0; i < components.length; i++) n.set(components[i])
+      } else n.set(components)
     }
   },
-  "load": function (comps) {
-    if (!type.isEmpty(comps)) {
-      if (!type.isArray(comps)) n.set(comps);
-      else {
-        for (var i = 0; i < comps.length; i++) n.set(comps[i]);
-      }
-    }
-  },
-  "destroy": function (name) {
-    if (type.isEmpty(name)) throw new Error('Destroy without objective');
-    else document.querySelector(name).innerHTML = "";
-  },
-  "emit": function (ev, data) {
-    if (type.isEmpty(ev)) throw new Error('No event selected.');
+  emit (ev, data) {
+    if (type.isEmpty(ev)) throw new Error('No event selected.')
     else if (type.isArray(ev)) {
-      for (var i = 0; i < ev.length; i++) {
-        if (!type.isEmpty(n.events[ev[i]]) && type.isFunction(n.events[ev[i]])) n.events[ev[i]](data);
-      }
-    } else if (!type.isEmpty(n.events[ev]) && type.isFunction(n.events[ev])) n.events[ev](data);
+      ev.forEach(trigger => {
+        if (!type.isEmpty(n.events[trigger]) && type.isFunction(n.events[trigger])) n.events[trigger](data)
+      })
+    } else if (!type.isEmpty(n.events[ev]) && type.isFunction(n.events[ev])) n.events[ev](data)
   },
-  "on": function (obj, eventHandler, callback) {
-    if (type.isEmpty(obj)) throw new Error('Event without objective');
+  on (trigger, callback) {
+    if (type.isEmpty(trigger)) throw new Error('Event without objective')
     else {
-      if (type.isString(obj)) {
-        if (obj[0] === '#') {
-          var nid = document.getElementById(obj.slice(1,obj.length));
-          nid.addEventListener(eventHandler, callback);
-        } else if (obj[0] === '.') {
-          var ncl = document.getElementsByClassName(obj.slice(1,obj.length));
-          for (var ic = 0; ic < ncl.length; ic++) {
-            ncl[ic].addEventListener(eventHandler, callback);
-          }
-        } else {
-          if (type.isEmpty(eventHandler) || !type.isFunction(eventHandler)) throw new Error('Event needs a function');
-          else n.events[obj] = eventHandler;
-        }
-      } else {
-        if (type.isEmpty(eventHandler)) throw new Error('Event without event handler');
-        else if (type.isEmpty(callback)) throw new Error('Event without function');
-        else if (Array.isArray(obj)) {
-          for (var i = 0; i < obj.length; i++) {
-            obj[i].addEventListener(eventHandler, callback);
-          }
-        } else obj.addEventListener(eventHandler,callback);
+      if (type.isEmpty(callback)) throw new Error('Event without function')
+      else {
+        if (type.isArray(trigger)) {
+          trigger.forEach(trig => {
+            n.events[trig] = callback
+          })
+        } else n.events[trigger] = callback
       }
     }
   },
-  "ready": function (callback) {
-    document.addEventListener("DOMContentLoaded", callback);
+  ready (callback) {
+    document.addEventListener('DOMContentLoaded', callback)
+  },
+  render (name, data) {
+    if (type.isEmpty(name) && !type.isString(name)) throw new Error('Need a valid name component')
+    else if (type.isEmpty(n.components[name])) throw new Error(`The component '${name}' no exists.`)
+    else {
+      n.comp.render(n, 'name', data)
+    }
   }
-};
+}
 
-n.params = n.getParams();
-
-module.exports = n;
+export default n
