@@ -1,65 +1,46 @@
-'use strict'
-import type from './type'
-import cookies from './cookies'
-import tools from './tools'
-import comp from './comp'
-
+const convert = require('xml-js')
 const n = {
-  events: {},
-  store: {},
-  components: {},
-  relations: {},
-  empty: type.isEmpty,
-  cookies: cookies,
-  get: document.querySelector,
-  id: document.getElementById,
-  class: document.getElementsByClassName,
-  comp: comp,
-  getParams () {
-    return tools.params
-  },
-  set (object) {
-    if (type.isEmpty(object) && !type.isObject(object)) throw new Error('Need object for create a component')
-    else n.components[object.name] = object
-  },
-  load (components) {
-    if (!type.isEmpty(components)) {
-      if (!type.isArray(components)) {
-        for (var i = 0; i < components.length; i++) n.set(components[i])
-      } else n.set(components)
+  components: {
+    list: {
+      html: state => `<strong>${state.nom}</strong>`
     }
   },
-  emit (ev, data) {
-    if (type.isEmpty(ev)) throw new Error('No event selected.')
-    else if (type.isArray(ev)) {
-      ev.forEach(trigger => {
-        if (!type.isEmpty(n.events[trigger]) && type.isFunction(n.events[trigger])) n.events[trigger](data)
-      })
-    } else if (!type.isEmpty(n.events[ev]) && type.isFunction(n.events[ev])) n.events[ev](data)
-  },
-  on (trigger, callback) {
-    if (type.isEmpty(trigger)) throw new Error('Event without objective')
-    else {
-      if (type.isEmpty(callback)) throw new Error('Event without function')
-      else {
-        if (type.isArray(trigger)) {
-          trigger.forEach(trig => {
-            n.events[trig] = callback
-          })
-        } else n.events[trigger] = callback
+  state: {
+    krm: {
+      name : 'list',
+      state: {
+        nom: 'Josep'
+      }
+    },
+    eud: {
+      name : 'list',
+      state: {
+        nom: 'Eudald'
       }
     }
+  }, 
+  schema: '',
+  worker (template) {
+    return template.elements.map(element => {
+      if (undefined !== n.state[element.name]) {
+        const html = n.components[n.state[element.name].name].html(n.state[element.name].state)
+        const component =  convert.xml2js(html)
+        return n.worker(component)[0]
+      } else return element
+    })
   },
-  ready (callback) {
-    document.addEventListener('DOMContentLoaded', callback)
-  },
-  render (name, data) {
-    if (type.isEmpty(name) && !type.isString(name)) throw new Error('Need a valid name component')
-    else if (type.isEmpty(n.components[name])) throw new Error(`The component '${name}' no exists.`)
-    else {
-      n.comp.render(n, 'name', data)
-    }
+  render (element) {
+    const start = document.getElementById(element)
+    const web = convert.xml2js(n.schema)
+    const newjson = n.worker(web)
+    const xml = convert.js2xml({ elements: newjson })
+    start.innerHTML = xml
   }
 }
 
-export default n
+document.addEventListener('DOMContentLoaded', () => {
+  n.schema = document.getElementById('main').innerHTML
+  n.render('main')
+})
+
+module.exports = n
