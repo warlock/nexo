@@ -4,7 +4,10 @@ const tools = require('./tools')
 const n = {
   components: {
     list: {
-      html: state => `<p><strong>${state.name}</strong></p>`,
+      html: (state, attr) => `<p><strong>${state.name}</strong> is ${attr.nom}</p>`,
+      attr: {
+        nom: 'josep'
+      },
       onload: state => {
       },
       ready: state => {
@@ -27,7 +30,15 @@ const n = {
   render (template) {
     return template.elements.map(element => {
       if (undefined !== n.components[element.name]) {
-        const html = n.components[element.name].html(n.state)
+        var attr = {}
+        if (undefined !== n.components[element.name].attr) {
+          Object.keys(n.components[element.name].attr).forEach(key => {
+            if (undefined !== element.attributes && undefined !== element.attributes[key]) {
+              attr[key] = element.attributes[key]
+            } else attr[key] = n.components[element.name].attr[key]
+          })
+        }
+        const html = n.components[element.name].html(n.state, attr)
         const component = convert.xml2js(html)
         const newcomp = n.render(component)[0]
         return newcomp
