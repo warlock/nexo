@@ -19,11 +19,9 @@ const n = {
       },
       ready: n => {
         console.log('Component list ready!')
-        /*
         setInterval(() => {
           n.set('name', Math.random().toString(36).substr(2, 10))
         }, 1000)
-        */
       }
     },
     user: {

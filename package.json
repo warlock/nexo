@@ -1,9 +1,10 @@
 {
   "name": "nexo",
-  "version": "0.0.54",
+  "version": "2.0.0-pre",
   "description": "Lightweight Javascript Web Components for Frontend",
   "main": "nexo.js",
   "scripts": {
+    "start": "./node_modules/webpack/bin/webpack.js -w",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

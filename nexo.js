@@ -70,17 +70,76 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const tojson = __webpack_require__(3)
-const tohtml = __webpack_require__(7).toHTML
-const cookies = __webpack_require__(10)
-const params = __webpack_require__(11)
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.startsWith = startsWith;
+exports.endsWith = endsWith;
+exports.stringIncludes = stringIncludes;
+exports.isRealNaN = isRealNaN;
+exports.arrayIncludes = arrayIncludes;
+/*
+  We don't want to include babel-polyfill in our project.
+    - Library authors should be using babel-runtime for non-global polyfilling
+    - Adding babel-polyfill/-runtime increases bundle size significantly
+
+  We will include our polyfill instance methods as regular functions.
+*/
+
+function startsWith(str, searchString, position) {
+  return str.substr(position || 0, searchString.length) === searchString;
+}
+
+function endsWith(str, searchString, position) {
+  var index = (position || str.length) - searchString.length;
+  var lastIndex = str.lastIndexOf(searchString, index);
+  return lastIndex !== -1 && lastIndex === index;
+}
+
+function stringIncludes(str, searchString, position) {
+  return str.indexOf(searchString, position || 0) !== -1;
+}
+
+function isRealNaN(x) {
+  return typeof x === 'number' && isNaN(x);
+}
+
+function arrayIncludes(array, searchElement, position) {
+  var len = array.length;
+  if (len === 0) return false;
+
+  var lookupIndex = position | 0;
+  var isNaNElement = isRealNaN(searchElement);
+  var searchIndex = lookupIndex >= 0 ? lookupIndex : len + lookupIndex;
+  while (searchIndex < len) {
+    var element = array[searchIndex++];
+    if (element === searchElement) return true;
+    if (isNaNElement && isRealNaN(element)) return true;
+  }
+
+  return false;
+}
+//# sourceMappingURL=compat.js.map
+
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const tojson = __webpack_require__(2)
+const tohtml = __webpack_require__(6).toHTML
+const cookies = __webpack_require__(9)
+const params = __webpack_require__(10)
 
 const n = {
   cookies: cookies,
@@ -98,11 +157,9 @@ const n = {
       },
       ready: n => {
         console.log('Component list ready!')
-        /*
         setInterval(() => {
           n.set('name', Math.random().toString(36).substr(2, 10))
         }, 1000)
-        */
       }
     },
     user: {
@@ -189,67 +246,7 @@ module.exports = n
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.startsWith = startsWith;
-exports.endsWith = endsWith;
-exports.stringIncludes = stringIncludes;
-exports.isRealNaN = isRealNaN;
-exports.arrayIncludes = arrayIncludes;
-/*
-  We don't want to include babel-polyfill in our project.
-    - Library authors should be using babel-runtime for non-global polyfilling
-    - Adding babel-polyfill/-runtime increases bundle size significantly
-
-  We will include our polyfill instance methods as regular functions.
-*/
-
-function startsWith(str, searchString, position) {
-  return str.substr(position || 0, searchString.length) === searchString;
-}
-
-function endsWith(str, searchString, position) {
-  var index = (position || str.length) - searchString.length;
-  var lastIndex = str.lastIndexOf(searchString, index);
-  return lastIndex !== -1 && lastIndex === index;
-}
-
-function stringIncludes(str, searchString, position) {
-  return str.indexOf(searchString, position || 0) !== -1;
-}
-
-function isRealNaN(x) {
-  return typeof x === 'number' && isNaN(x);
-}
-
-function arrayIncludes(array, searchElement, position) {
-  var len = array.length;
-  if (len === 0) return false;
-
-  var lookupIndex = position | 0;
-  var isNaNElement = isRealNaN(searchElement);
-  var searchIndex = lookupIndex >= 0 ? lookupIndex : len + lookupIndex;
-  while (searchIndex < len) {
-    var element = array[searchIndex++];
-    if (element === searchElement) return true;
-    if (isNaNElement && isRealNaN(element)) return true;
-  }
-
-  return false;
-}
-//# sourceMappingURL=compat.js.map
-
-
-/***/ }),
-/* 2 */,
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -261,15 +258,15 @@ Object.defineProperty(exports, "__esModule", {
 exports.parseDefaults = undefined;
 exports.parse = parse;
 
-var _lexer = __webpack_require__(4);
+var _lexer = __webpack_require__(3);
 
 var _lexer2 = _interopRequireDefault(_lexer);
 
-var _parser = __webpack_require__(5);
+var _parser = __webpack_require__(4);
 
 var _parser2 = _interopRequireDefault(_parser);
 
-var _v = __webpack_require__(6);
+var _v = __webpack_require__(5);
 
 var _v2 = _interopRequireDefault(_v);
 
@@ -327,7 +324,7 @@ exports.default = { parse: parse, parseDefaults: parseDefaults };
 
 
 /***/ }),
-/* 4 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -346,7 +343,7 @@ exports.lexTagName = lexTagName;
 exports.lexTagAttributes = lexTagAttributes;
 exports.lexSkipTag = lexSkipTag;
 
-var _compat = __webpack_require__(1);
+var _compat = __webpack_require__(0);
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -608,7 +605,7 @@ function lexSkipTag(tagName, state) {
 
 
 /***/ }),
-/* 5 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -621,7 +618,7 @@ exports.default = parser;
 exports.hasTerminalParent = hasTerminalParent;
 exports.parse = parse;
 
-var _compat = __webpack_require__(1);
+var _compat = __webpack_require__(0);
 
 function parser(tokens, options) {
   var root = { tagName: null, children: [] };
@@ -736,7 +733,7 @@ function parse(state) {
 
 
 /***/ }),
-/* 6 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -760,7 +757,7 @@ exports.splitHead = splitHead;
 exports.formatAttributes = formatAttributes;
 exports.formatStyles = formatStyles;
 
-var _compat = __webpack_require__(1);
+var _compat = __webpack_require__(0);
 
 function format(nodes) {
   return nodes.map(function (node) {
@@ -853,24 +850,24 @@ function formatStyles(str) {
 
 
 /***/ }),
-/* 7 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(8)
+module.exports = __webpack_require__(7)
 
 
 /***/ }),
-/* 8 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _paul = __webpack_require__(9);
+var _paul = __webpack_require__(8);
 
 var _paul2 = _interopRequireDefault(_paul);
 
-var _compat = __webpack_require__(1);
+var _compat = __webpack_require__(0);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1085,7 +1082,7 @@ module.exports = {
 
 
 /***/ }),
-/* 9 */
+/* 8 */
 /***/ (function(module, exports) {
 
 
@@ -1456,7 +1453,7 @@ module.exports = Paul;
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -1478,10 +1475,10 @@ module.exports = {
 
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const type = __webpack_require__(12)
+const type = __webpack_require__(11)
 
 module.exports = () => {
   var paramstr = window.location.search
@@ -1506,7 +1503,7 @@ module.exports = () => {
 }
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports) {
 
 var tck = {
