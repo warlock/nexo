@@ -1,6 +1,43 @@
 <html>
   <head>
   <script src="../nexo.js"></script>
+  <script>
+    n.state.name = 'Inici'
+
+    n.components['list'] = {
+      html: (state, attr) => `
+      <p>${state.name} is ${attr.nom}</p>
+      <ex></ex>            
+      <user></user>
+      `,
+      attr: {
+        nom: 'josep'
+      },
+      ready: n => {
+        console.log('Component list ready!')
+        setInterval(() => {
+          n.set('name', Math.random().toString(36).substr(2, 10))
+        }, 2000)
+      }
+    }
+
+    n.components['user'] = {
+      html: (state, attr) => `<p>El nom del usuari es: ${attr.nom} el estat es ${state.name}</p>
+      <ex></ex>
+      <ex></ex>
+      `,
+      attr: {
+        nom: 'user'
+      },
+      load: (n, attr) => {
+        n.set('name', 'buuu')
+      }
+    }
+
+    n.components['ex'] = {
+      html: (state, attr) => `<p>hola</p>`
+    }
+  </script>
   </head>
   <body>
     <div id="main">

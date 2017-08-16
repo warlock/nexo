@@ -145,43 +145,8 @@ const n = {
   cookies: cookies,
   params: params,
   stack: [],
-  components: {
-    list: {
-      html: (state, attr) => `
-      <p>${state.name} is ${attr.nom}</p>
-      <ex></ex>            
-      <user></user>
-      `,
-      attr: {
-        nom: 'josep'
-      },
-      ready: n => {
-        console.log('Component list ready!')
-        setInterval(() => {
-          n.set('name', Math.random().toString(36).substr(2, 10))
-        }, 1000)
-      }
-    },
-    user: {
-      html: (state, attr) => `<p>El nom del usuari es: ${attr.nom} el estat es ${state.name}</p>
-      <ex></ex>
-      <ex></ex>
-      `,
-      attr: {
-        nom: 'user'
-      },
-      load: (n, attr) => {
-        console.log('canvi d\'estat')
-        n.set('name', 'buuu')
-      }
-    },
-    ex: {
-      html: (state, attr) => `<p>hola</p>`
-    }
-  },
-  state: {
-    name: 'Estat inicial'
-  },
+  components: {},
+  state: {},
   schema: '',
   stack: [],
   set (name, value) {
@@ -224,23 +189,24 @@ const n = {
     const newSchema = n.render(n.schema)
     const htmlSchema = tohtml(newSchema)
     n.main.innerHTML = htmlSchema
+  },
+  start () {
+    document.addEventListener('DOMContentLoaded', () => {
+      n.main = document.getElementById('main')
+      const main = n.main.innerHTML
+      n.schema = tojson.parse(main)
+      n.done()
+    
+      while (n.stack.length > 0) {
+        const ready = n.stack.shift()
+        console.log(ready.name)
+        n.components[ready.name].ready(n, ready.attributes)
+      }
+    })
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  n.main = document.getElementById('main')
-  const main = n.main.innerHTML
-  n.schema = tojson.parse(main)
-  n.done()
-
-  console.log(n.stack)
-
-  while (n.stack.length > 0) {
-    const ready = n.stack.shift()
-    console.log(ready.name)
-    n.components[ready.name].ready(n, ready.attributes)
-  }
-})
+n.start()
 
 module.exports = n
 
