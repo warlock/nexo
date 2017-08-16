@@ -144,8 +144,31 @@ const params = __webpack_require__(10)
 const n = {
   cookies: cookies,
   params: params,
+  router: {
+    actual: {},
+    options: { url : 'force' },
+    get (value) {
+      n.router.actual = value
+    },
+    set (value) {
+      n.router.data = value
+    },
+    data: {
+      ruta1: { name: 'list' },
+      ruta2: { name: 'user', attr: {  } }
+    }
+  },
   stack: [],
-  components: {},
+  components: {
+    router: {
+      html: () => {
+        return ``
+      },
+      attr: {
+        nom: 'josep'
+      }
+    }
+  },
   state: {},
   schema: '',
   stack: [],
