@@ -1,10 +1,13 @@
-const convert = require('xml-js')
 const tools = require('./tools')
+const tojson = require('himalaya')
+const tohtml = require('himalaya/translate').toHTML
 
 const n = {
   components: {
     list: {
-      html: (state, attr) => `<p><strong>${state.name}</strong> is ${attr.nom}</p>`,
+      html: (state, attr) => `
+      <p>${state.name} is ${attr.nom}</p>
+      `,
       attr: {
         nom: 'josep'
       },
@@ -16,6 +19,15 @@ const n = {
           state('name', tools.random())
         }, 1000)
       }
+    },
+    user: {
+      html: (state, attr) => `<p>El nom del usuari es: ${attr.nom}</p>`,
+      attr: {
+        nom: 'user'
+      }
+    },
+    ex: {
+      html: (state, attr) => `<p>hola</p>`
     }
   },
   state: {
@@ -28,40 +40,44 @@ const n = {
     n.done()
   },
   render (template) {
-    return template.elements.map(element => {
-      if (undefined !== n.components[element.name]) {
-        var attr = {}
-        if (undefined !== n.components[element.name].attr) {
-          Object.keys(n.components[element.name].attr).forEach(key => {
-            if (undefined !== element.attributes && undefined !== element.attributes[key]) {
-              attr[key] = element.attributes[key]
-            } else attr[key] = n.components[element.name].attr[key]
-          })
-        }
-        const html = n.components[element.name].html(n.state, attr)
-        const component = convert.xml2js(html)
-        const newcomp = n.render(component)[0]
-        return newcomp
-      } else return element
+    var makeAttr = (name, attrs) => {
+      var accAttr = Object.assign({}, n.components[name].attr)
+      Object.keys(attrs).forEach(attr => {
+        accAttr[attr] = attrs[attr]
+      })
+      return accAttr
+    }
+    var accumulator = []
+    template.forEach(element => {
+      if (element.type === 'Element' && undefined !== n.components[element.tagName]) {
+        console.log('Element: ' + element.tagName)
+        const htmlSchema = n.components[element.tagName].html(n.state, makeAttr(element.tagName, element.attributes))
+        const jsonSchema = tojson.parse(htmlSchema)
+        jsonSchema.forEach(newEl => {
+          accumulator.push(newEl)
+        })
+      } else accumulator.push(element)
     })
+    return accumulator
   },
   done () {
-    const schema = n.render(n.schema)
-    const xml = convert.js2xml({ elements: schema })
     const start = document.getElementById('main')
-    start.innerHTML = xml
+    const newSchema = n.render(n.schema)
+    const htmlSchema = tohtml(newSchema)
+    start.innerHTML = htmlSchema
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const start = document.getElementById('main')
   const main = start.innerHTML
-  n.schema = convert.xml2js(main)
-  const schema = n.render(n.schema)
-  const xml = convert.js2xml({ elements: schema })
-  start.innerHTML = xml
+  n.schema = tojson.parse(main)
+  const newSchema = n.render(n.schema)
+  const htmlSchema = tohtml(newSchema)
+  start.innerHTML = htmlSchema
+
   Object.keys(n.components).forEach(name => {
-    n.components[name].ready(n.set)
+    if (undefined !== n.components[name].ready) n.components[name].ready(n.set)
   })
 })
 
