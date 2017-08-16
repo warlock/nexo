@@ -7,17 +7,20 @@ const n = {
     list: {
       html: (state, attr) => `
       <p>${state.name} is ${attr.nom}</p>
+      <user></user>      
       `,
       attr: {
         nom: 'josep'
       },
-      onload: state => {
+      onload: (state, set) => {
       },
-      ready: state => {
+      ready: (state, set) => {
+        /*
         console.log('Tornant a pintar !')
         setInterval(() => {
-          state('name', tools.random())
+          setState('name', tools.random())
         }, 1000)
+        */
       }
     },
     user: {
@@ -39,45 +42,42 @@ const n = {
     n.state[name] = value
     n.done()
   },
-  render (template) {
-    var makeAttr = (name, attrs) => {
-      var accAttr = Object.assign({}, n.components[name].attr)
-      Object.keys(attrs).forEach(attr => {
-        accAttr[attr] = attrs[attr]
-      })
-      return accAttr
-    }
-    var accumulator = []
-    template.forEach(element => {
-      if (element.type === 'Element' && undefined !== n.components[element.tagName]) {
-        console.log('Element: ' + element.tagName)
-        const htmlSchema = n.components[element.tagName].html(n.state, makeAttr(element.tagName, element.attributes))
-        const jsonSchema = tojson.parse(htmlSchema)
-        jsonSchema.forEach(newEl => {
-          accumulator.push(newEl)
-        })
-      } else accumulator.push(element)
+  makeAttr (name, attrs) {
+    var accAttr = Object.assign({}, n.components[name].attr)
+    Object.keys(attrs).forEach(attr => {
+      accAttr[attr] = attrs[attr]
     })
-    return accumulator
+    return accAttr
+  },
+  render (element) {
+    if (Array.isArray(element)) {
+      return element.map(n.render)
+    } else {
+      if (element.type === 'Element' && undefined !== n.components[element.tagName]) {
+        console.log(element.tagName)
+        const htmlSchema = n.components[element.tagName].html(n.state, n.makeAttr(element.tagName, element.attributes))
+        const jsonSchema = tojson.parse(htmlSchema)
+        if (undefined !== jsonSchema.children && jsonSchema.children.length > 0) jsonSchema.children = n.render(jsonSchema.children)
+        return jsonSchema // Can return an array
+      } else return element
+    }
   },
   done () {
-    const start = document.getElementById('main')
     const newSchema = n.render(n.schema)
+    console.log(JSON.stringify(newSchema))
     const htmlSchema = tohtml(newSchema)
-    start.innerHTML = htmlSchema
+    n.main.innerHTML = htmlSchema
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const start = document.getElementById('main')
-  const main = start.innerHTML
+  n.main = document.getElementById('main')
+  const main = n.main.innerHTML
   n.schema = tojson.parse(main)
-  const newSchema = n.render(n.schema)
-  const htmlSchema = tohtml(newSchema)
-  start.innerHTML = htmlSchema
+  n.done()
 
   Object.keys(n.components).forEach(name => {
-    if (undefined !== n.components[name].ready) n.components[name].ready(n.set)
+    if (undefined !== n.components[name].ready) n.components[name].ready(n.state, n.set)
   })
 })
 
