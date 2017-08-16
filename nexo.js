@@ -84,7 +84,8 @@ const params = __webpack_require__(11)
 
 const n = {
   cookies: cookies,
-  params: params,  
+  params: params,
+  stack: [],
   components: {
     list: {
       html: (state, attr) => `
@@ -149,19 +150,21 @@ const n = {
         const jsonSchema = tojson.parse(htmlSchema)
         if (undefined !== jsonSchema.children && jsonSchema.children.length > 0) jsonSchema.children = n.render(jsonSchema.children)
         const loop = n.render(jsonSchema)
+        if (undefined !== n.components[element.tagName].ready) n.stack.push({
+          name: element.tagName,
+          attributes: n.makeAttr(element.tagName, element.attributes)
+        })
         return {
           type:"Element",
           tagName:"div",
-          attributes: element.attributes,
+          attributes: n.makeAttr(element.tagName, element.attributes),
           children: loop
         }
       } else return element
     }
   },
   done () {
-    console.log(JSON.stringify(n.state))  
     const newSchema = n.render(n.schema)
-    console.log(JSON.stringify(newSchema))      
     const htmlSchema = tohtml(newSchema)
     n.main.innerHTML = htmlSchema
   }
@@ -173,9 +176,13 @@ document.addEventListener('DOMContentLoaded', () => {
   n.schema = tojson.parse(main)
   n.done()
 
-  Object.keys(n.components).forEach(name => {
-    if (undefined !== n.components[name].ready) n.components[name].ready(n)
-  })
+  console.log(n.stack)
+
+  while (n.stack.length > 0) {
+    const ready = n.stack.shift()
+    console.log(ready.name)
+    n.components[ready.name].ready(n, ready.attributes)
+  }
 })
 
 module.exports = n
