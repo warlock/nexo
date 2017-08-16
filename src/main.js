@@ -1,8 +1,11 @@
-const tools = require('./tools')
 const tojson = require('himalaya')
 const tohtml = require('himalaya/translate').toHTML
+const cookies = require('./cookies')
+const params = require('./params')
 
 const n = {
+  cookies: cookies,
+  params: params,  
   components: {
     list: {
       html: (state, attr) => `
@@ -13,22 +16,26 @@ const n = {
       attr: {
         nom: 'josep'
       },
-      onload: (state, set) => {
-      },
-      ready: (state, set) => {
+      ready: n => {
         console.log('Component list ready!')
+        /*
         setInterval(() => {
-          set('name', tools.random())
+          n.set('name', Math.random().toString(36).substr(2, 10))
         }, 1000)
+        */
       }
     },
     user: {
-      html: (state, attr) => `<p>El nom del usuari es: ${attr.nom}</p>
+      html: (state, attr) => `<p>El nom del usuari es: ${attr.nom} el estat es ${state.name}</p>
       <ex></ex>
       <ex></ex>
       `,
       attr: {
         nom: 'user'
+      },
+      load: (n, attr) => {
+        console.log('canvi d\'estat')
+        n.set('name', 'buuu')
       }
     },
     ex: {
@@ -41,8 +48,10 @@ const n = {
   schema: '',
   stack: [],
   set (name, value) {
-    n.state[name] = value
-    n.done()
+    if (value !== n.state[name]) {
+      n.state[name] = value
+      n.done()
+    }
   },
   makeAttr (name, attrs) {
     var accAttr = Object.assign({}, n.components[name].attr)
@@ -56,6 +65,7 @@ const n = {
       return element.map(n.render)
     } else {
       if (element.type === 'Element' && undefined !== n.components[element.tagName]) {
+        if (undefined !== n.components[element.tagName].load) n.components[element.tagName].load(n, n.makeAttr(element.tagName, element.attributes))
         const htmlSchema = n.components[element.tagName].html(n.state, n.makeAttr(element.tagName, element.attributes))
         const jsonSchema = tojson.parse(htmlSchema)
         if (undefined !== jsonSchema.children && jsonSchema.children.length > 0) jsonSchema.children = n.render(jsonSchema.children)
@@ -70,7 +80,9 @@ const n = {
     }
   },
   done () {
+    console.log(JSON.stringify(n.state))  
     const newSchema = n.render(n.schema)
+    console.log(JSON.stringify(newSchema))      
     const htmlSchema = tohtml(newSchema)
     n.main.innerHTML = htmlSchema
   }
@@ -83,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   n.done()
 
   Object.keys(n.components).forEach(name => {
-    if (undefined !== n.components[name].ready) n.components[name].ready(n.state, n.set)
+    if (undefined !== n.components[name].ready) n.components[name].ready(n)
   })
 })
 

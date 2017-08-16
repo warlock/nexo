@@ -77,11 +77,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const tools = __webpack_require__(2)
 const tojson = __webpack_require__(3)
 const tohtml = __webpack_require__(7).toHTML
+const cookies = __webpack_require__(10)
+const params = __webpack_require__(11)
 
 const n = {
+  cookies: cookies,
+  params: params,  
   components: {
     list: {
       html: (state, attr) => `
@@ -92,22 +95,26 @@ const n = {
       attr: {
         nom: 'josep'
       },
-      onload: (state, set) => {
-      },
-      ready: (state, set) => {
+      ready: n => {
         console.log('Component list ready!')
+        /*
         setInterval(() => {
-          set('name', tools.random())
+          n.set('name', Math.random().toString(36).substr(2, 10))
         }, 1000)
+        */
       }
     },
     user: {
-      html: (state, attr) => `<p>El nom del usuari es: ${attr.nom}</p>
+      html: (state, attr) => `<p>El nom del usuari es: ${attr.nom} el estat es ${state.name}</p>
       <ex></ex>
       <ex></ex>
       `,
       attr: {
         nom: 'user'
+      },
+      load: (n, attr) => {
+        console.log('canvi d\'estat')
+        n.set('name', 'buuu')
       }
     },
     ex: {
@@ -120,8 +127,10 @@ const n = {
   schema: '',
   stack: [],
   set (name, value) {
-    n.state[name] = value
-    n.done()
+    if (value !== n.state[name]) {
+      n.state[name] = value
+      n.done()
+    }
   },
   makeAttr (name, attrs) {
     var accAttr = Object.assign({}, n.components[name].attr)
@@ -135,6 +144,7 @@ const n = {
       return element.map(n.render)
     } else {
       if (element.type === 'Element' && undefined !== n.components[element.tagName]) {
+        if (undefined !== n.components[element.tagName].load) n.components[element.tagName].load(n, n.makeAttr(element.tagName, element.attributes))
         const htmlSchema = n.components[element.tagName].html(n.state, n.makeAttr(element.tagName, element.attributes))
         const jsonSchema = tojson.parse(htmlSchema)
         if (undefined !== jsonSchema.children && jsonSchema.children.length > 0) jsonSchema.children = n.render(jsonSchema.children)
@@ -149,7 +159,9 @@ const n = {
     }
   },
   done () {
+    console.log(JSON.stringify(n.state))  
     const newSchema = n.render(n.schema)
+    console.log(JSON.stringify(newSchema))      
     const htmlSchema = tohtml(newSchema)
     n.main.innerHTML = htmlSchema
   }
@@ -162,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
   n.done()
 
   Object.keys(n.components).forEach(name => {
-    if (undefined !== n.components[name].ready) n.components[name].ready(n.state, n.set)
+    if (undefined !== n.components[name].ready) n.components[name].ready(n)
   })
 })
 
@@ -229,16 +241,7 @@ function arrayIncludes(array, searchElement, position) {
 
 
 /***/ }),
-/* 2 */
-/***/ (function(module, exports) {
-
-module.exports = {
-  random () {
-    return Math.random().toString(36).substr(2, 10)
-  }
-}
-
-/***/ }),
+/* 2 */,
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1443,6 +1446,155 @@ function whereFilter(obj) {
 }
 
 module.exports = Paul;
+
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+module.exports = {
+  set (key, value, exdays) {
+    var d = new Date()
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000))
+    var expires = `expires=${d.toUTCString()}`
+    document.cookie = `${key}=${value};${expires};path=/`
+  },
+  get (key) {
+    var value = ''
+    document.cookie.split('; ').forEach(e => {
+      var x = e.split('=')
+      if (x[0] === key) value = x[1]
+    })
+    return value
+  }
+}
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+const type = __webpack_require__(12)
+
+module.exports = () => {
+  var paramstr = window.location.search
+  if (!type.isEmpty(paramstr)) {
+    paramstr = paramstr.substring(1)
+    var parray = paramstr.split('&')
+    if (parray.length > 0) {
+      var params = {}
+      parray.forEach(function (pstr) {
+        if (!type.isEmpty(pstr)) {
+          var parr = pstr.split('=')
+          if (!type.isEmpty(parr[0]) && !type.isEmpty(parr[0].trim()) && !type.isEmpty(parr[1])) {
+            parr[1] = parr[1].trim()
+            parr[1] = decodeURIComponent(parr[1]).trim()
+            if (!type.isEmpty(parr[1])) params[parr[0].trim()] = parr[1]
+          }
+        }
+      })
+      return params
+    } else return {}
+  } else return {}
+}
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+var tck = {
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is a function
+   */
+  'isFunction': function (data) {
+    return typeof data === 'function';
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is a array
+   */
+  'isArray': function (data) {
+    return typeof data === "object" && data instanceof Array;
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is a object
+   */
+  'isObject': function (data) {
+    return (typeof data === "object") && !(data instanceof Array) && data !== null;
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is a number
+   */
+  'isNumber': function (data) {
+    return typeof data === "number" || data instanceof Number;
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is a integer
+   */
+  'isInteger': function (data) {
+    if (tck.isNumber(data)) return data % 1 === 0;
+    else return false;
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is a string
+   */
+  'isString': function (data) {
+    return typeof data === "string" || data instanceof String;
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is boolean
+   */
+  'isBoolean': function (data) {
+    return typeof data === "boolean";
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Returns true when data is empty
+   */
+  'isEmpty': function (data) {
+    return tck.isUndefined(data) || tck.isNull(data) || data === "";
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is null
+   */
+  'isNull': function (data) {
+    return data === null;
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is not a number
+   */
+  'isNaN': function (data) {
+    return isNaN(data);
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is undefined
+   */
+  'isUndefined': function (data) {
+    return undefined === data;
+  }
+};
+
+module.exports = tck;
 
 
 /***/ })
