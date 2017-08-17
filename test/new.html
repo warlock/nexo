@@ -2,6 +2,12 @@
   <head>
   <script src="../nexo.js"></script>
   <script>
+    n.router.set({
+      default: { name: 'ex' },
+      '#/lista': { name: 'list' },
+      '#/user': { name: 'user', attributes: {} }
+    })
+
     n.state.name = 'Inici'
 
     n.components['list'] = {
@@ -42,9 +48,7 @@
   <body>
     <div id="main">
       <strong>START</strong>
-      <list nom="Eudald"></list>
-      <list nom="Simon"></list>
-      <list></list>
+      <routerview></routerview>
     </div>
   </body>
 </html>

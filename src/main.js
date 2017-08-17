@@ -1,39 +1,44 @@
 const tojson = require('himalaya')
 const tohtml = require('himalaya/translate').toHTML
 const cookies = require('./cookies')
-const params = require('./params')
 
 const n = {
   cookies: cookies,
-  params: params,
   router: {
-    actual: {},
-    options: { url : 'force' },
+    actual: () => {
+      if (undefined !== n.router.data[window.location.hash]) return n.router.data[window.location.hash]
+      else if (undefined !== n.router.data['default']) return n.router.data['default']
+      else return undefined
+    },
+    options: { url: 'force' },
     get (value) {
       n.router.actual = value
     },
     set (value) {
       n.router.data = value
     },
-    data: {
-      ruta1: { name: 'list' },
-      ruta2: { name: 'user', attr: {  } }
-    }
+    data: {}
   },
   stack: [],
   components: {
-    router: {
+    routerview: {
       html: () => {
-        return ``
-      },
-      attr: {
-        nom: 'josep'
+        const actual = n.router.actual()
+        console.log(JSON.stringify(actual))
+        if (actual === undefined) return ''
+        const comp = n.components[actual.name].html(n.state, n.makeAttr(actual.name, actual.attributes | {}))
+        const htmlTag = {
+          type: 'Element',
+          tagName: 'div',
+          attributes: { class: 'routerview' },
+          children: tojson.parse(comp)
+        }
+        return tohtml(htmlTag)
       }
     }
   },
   state: {},
   schema: '',
-  stack: [],
   set (name, value) {
     if (value !== n.state[name]) {
       n.state[name] = value
@@ -41,7 +46,7 @@ const n = {
     }
   },
   makeAttr (name, attrs) {
-    var accAttr = Object.assign({}, n.components[name].attr)
+    var accAttr = n.components[name].attr ? Object.assign({}, n.components[name].attr) : {}
     Object.keys(attrs).forEach(attr => {
       accAttr[attr] = attrs[attr]
     })
@@ -57,13 +62,16 @@ const n = {
         const jsonSchema = tojson.parse(htmlSchema)
         if (undefined !== jsonSchema.children && jsonSchema.children.length > 0) jsonSchema.children = n.render(jsonSchema.children)
         const loop = n.render(jsonSchema)
-        if (undefined !== n.components[element.tagName].ready) n.stack.push({
-          name: element.tagName,
-          attributes: n.makeAttr(element.tagName, element.attributes)
-        })
+        if (undefined !== n.components[element.tagName].ready) {
+          n.stack.push({
+            name: element.tagName,
+            attributes: n.makeAttr(element.tagName, element.attributes)
+          })
+        }
+
         return {
-          type:"Element",
-          tagName:"div",
+          type: 'Element',
+          tagName: 'div',
           attributes: n.makeAttr(element.tagName, element.attributes),
           children: loop
         }
@@ -81,13 +89,17 @@ const n = {
       const main = n.main.innerHTML
       n.schema = tojson.parse(main)
       n.done()
-    
+
       while (n.stack.length > 0) {
         const ready = n.stack.shift()
-        console.log(ready.name)
         n.components[ready.name].ready(n, ready.attributes)
       }
     })
+
+    window.addEventListener('hashchange', () => {
+      console.log('change')
+      n.done()
+    }, false)
   }
 }
 
