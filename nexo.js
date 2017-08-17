@@ -70,7 +70,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -134,18 +134,122 @@ function arrayIncludes(array, searchElement, position) {
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports) {
+
+var tck = {
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is a function
+   */
+  'isFunction': function (data) {
+    return typeof data === 'function';
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is a array
+   */
+  'isArray': function (data) {
+    return typeof data === "object" && data instanceof Array;
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is a object
+   */
+  'isObject': function (data) {
+    return (typeof data === "object") && !(data instanceof Array) && data !== null;
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is a number
+   */
+  'isNumber': function (data) {
+    return typeof data === "number" || data instanceof Number;
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is a integer
+   */
+  'isInteger': function (data) {
+    if (tck.isNumber(data)) return data % 1 === 0;
+    else return false;
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is a string
+   */
+  'isString': function (data) {
+    return typeof data === "string" || data instanceof String;
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is boolean
+   */
+  'isBoolean': function (data) {
+    return typeof data === "boolean";
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Returns true when data is empty
+   */
+  'isEmpty': function (data) {
+    return tck.isUndefined(data) || tck.isNull(data) || data === "";
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is null
+   */
+  'isNull': function (data) {
+    return data === null;
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is not a number
+   */
+  'isNaN': function (data) {
+    return isNaN(data);
+  },
+
+  /**
+   * @param {Any} data : Data for evaluation.
+   * @returns {Boolean} : Validate data is undefined
+   */
+  'isUndefined': function (data) {
+    return undefined === data;
+  }
+};
+
+module.exports = tck;
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
-const tojson = __webpack_require__(2)
-const tohtml = __webpack_require__(6).toHTML
-const cookies = __webpack_require__(9)
+const tojson = __webpack_require__(3)
+const tohtml = __webpack_require__(7).toHTML
+const cookies = __webpack_require__(10)
+const type = __webpack_require__(1)
+const event = __webpack_require__(11)
 
 const n = {
+  on: event.on,
+  emit: event.emit,
+  delete: event.delete,
   cookies: cookies,
   router: {
     actual: () => {
-      if (undefined !== n.router.data[window.location.hash]) return n.router.data[window.location.hash]
-      else if (undefined !== n.router.data['default']) return n.router.data['default']
+      if (!type.isEmpty(n.router.data[window.location.hash])) return n.router.data[window.location.hash]
+      else if (!type.isEmpty(n.router.data['default'])) return n.router.data['default']
       else return undefined
     },
     options: { url: 'force' },
@@ -162,8 +266,7 @@ const n = {
     routerview: {
       html: () => {
         const actual = n.router.actual()
-        console.log(JSON.stringify(actual))
-        if (actual === undefined) return ''
+        if (type.isEmpty(actual)) return ''
         const comp = n.components[actual.name].html(n.state, n.makeAttr(actual.name, actual.attributes | {}))
         const htmlTag = {
           type: 'Element',
@@ -238,6 +341,9 @@ const n = {
       console.log('change')
       n.done()
     }, false)
+  },
+  get (element) {
+    return document.querySelector(element)
   }
 }
 
@@ -247,7 +353,7 @@ module.exports = n
 
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -259,15 +365,15 @@ Object.defineProperty(exports, "__esModule", {
 exports.parseDefaults = undefined;
 exports.parse = parse;
 
-var _lexer = __webpack_require__(3);
+var _lexer = __webpack_require__(4);
 
 var _lexer2 = _interopRequireDefault(_lexer);
 
-var _parser = __webpack_require__(4);
+var _parser = __webpack_require__(5);
 
 var _parser2 = _interopRequireDefault(_parser);
 
-var _v = __webpack_require__(5);
+var _v = __webpack_require__(6);
 
 var _v2 = _interopRequireDefault(_v);
 
@@ -325,7 +431,7 @@ exports.default = { parse: parse, parseDefaults: parseDefaults };
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -606,7 +712,7 @@ function lexSkipTag(tagName, state) {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -734,7 +840,7 @@ function parse(state) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -851,20 +957,20 @@ function formatStyles(str) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(7)
+module.exports = __webpack_require__(8)
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var _paul = __webpack_require__(8);
+var _paul = __webpack_require__(9);
 
 var _paul2 = _interopRequireDefault(_paul);
 
@@ -1083,7 +1189,7 @@ module.exports = {
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 
@@ -1454,7 +1560,7 @@ module.exports = Paul;
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = {
@@ -1473,6 +1579,248 @@ module.exports = {
     return value
   }
 }
+
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(process) {const tck = __webpack_require__(1)
+
+const eem = {
+  event_stack: {},
+  
+  /**
+   * @param {String} ev : The name of event.
+   * @param {Function} callback : Function executed when event is triggered.
+   * @returns {undefined}
+   */
+  on: (ev, callback) => {
+    if (tck.isEmpty(this.event_stack)) this.event_stack = {}
+    if (tck.isEmpty(ev)) throw new Error('Need event key!')
+    else if (!tck.isFunction(callback)) throw new Error('Event needs a function!')
+    else if (tck.isArray(ev)) {
+      for (let y = 0; y < ev.length; y++) {
+        this.event_stack[ev[y]] = callback
+      }
+    } else this.event_stack[ev] = callback
+  },
+
+  /**
+   * @param {String} ev : The name of event.
+   * @param {Any} data : Data for a event callback.
+   * @returns {undefined}
+   */
+  emit: (ev, data) => {
+    if (tck.isEmpty(ev)) throw new Error('No event selected.')
+    else if (tck.isArray(ev)) {
+      for (let i = 0; i < ev.length; i++) {
+        if (tck.isFunction(this.event_stack[ev[i]])) this.event_stack[ev[i]](data)
+      }
+    } else if (tck.isFunction(this.event_stack[ev])) this.event_stack[ev](data)
+  },
+
+  /**
+   * @param {String} ev : The name of event for destroy.
+   * @returns {undefined}
+   */
+  delete: ev => {
+    if (!tck.isEmpty(this.event_stack[ev])) delete this.event_stack[ev]
+  }
+}
+
+if (typeof process === 'object') module.exports = eem
+
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(12)))
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports) {
+
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+process.prependListener = noop;
+process.prependOnceListener = noop;
+
+process.listeners = function (name) { return [] }
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
 
 
 /***/ })

@@ -1,13 +1,18 @@
 const tojson = require('himalaya')
 const tohtml = require('himalaya/translate').toHTML
 const cookies = require('./cookies')
+const type = require('tck')
+const event = require('eem')
 
 const n = {
+  on: event.on,
+  emit: event.emit,
+  delete: event.delete,
   cookies: cookies,
   router: {
     actual: () => {
-      if (undefined !== n.router.data[window.location.hash]) return n.router.data[window.location.hash]
-      else if (undefined !== n.router.data['default']) return n.router.data['default']
+      if (!type.isEmpty(n.router.data[window.location.hash])) return n.router.data[window.location.hash]
+      else if (!type.isEmpty(n.router.data['default'])) return n.router.data['default']
       else return undefined
     },
     options: { url: 'force' },
@@ -24,8 +29,7 @@ const n = {
     routerview: {
       html: () => {
         const actual = n.router.actual()
-        console.log(JSON.stringify(actual))
-        if (actual === undefined) return ''
+        if (type.isEmpty(actual)) return ''
         const comp = n.components[actual.name].html(n.state, n.makeAttr(actual.name, actual.attributes | {}))
         const htmlTag = {
           type: 'Element',
@@ -100,6 +104,9 @@ const n = {
       console.log('change')
       n.done()
     }, false)
+  },
+  get (element) {
+    return document.querySelector(element)
   }
 }
 
