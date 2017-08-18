@@ -5,7 +5,8 @@
     n.router.set({
       default: { name: 'ex' },
       '#/lista': { name: 'list' },
-      '#/user': { name: 'user', attributes: {} }
+      // '#/user': { name: 'user', attributes: {} },
+      '#/user/{id}/{data}': { name: 'user', attributes: {} }
     })
 
     n.state.name = 'Inici'

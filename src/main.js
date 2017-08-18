@@ -12,8 +12,24 @@ const n = {
   router: {
     actual: () => {
       if (!type.isEmpty(n.router.data[window.location.hash])) return n.router.data[window.location.hash]
-      else if (!type.isEmpty(n.router.data['default'])) return n.router.data['default']
-      else return undefined
+      else {
+        console.log('work in progress')
+        var reg = new RegExp(/{(.*?)}/g)
+        var urlfind = Object.keys(n.router.data).filter(url => {
+          return reg.test(url)
+        })
+
+        if (urlfind.length > 0) {
+          const keys = urlfind.match(/{(.*?)}/g)
+          const values = window.location.hash.match(/{(.*?)}/g)
+          var attributes = {}
+          keys.forEach((key, index) => {
+            attributes[key] = values[index]
+          })
+          console.log(JSON.stringify(attributes))
+          return findurl[0]
+        } else return n.router.data['default']
+      }
     },
     options: { url: 'force' },
     get (value) {
