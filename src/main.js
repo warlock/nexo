@@ -20,14 +20,18 @@ const n = {
         })
 
         if (urlfind.length > 0) {
-          const keys = urlfind.match(/{(.*?)}/g)
+          const keys = urlfind[0].match(/{(.*?)}/g).map(x => x.replace('}', '').replace('{', ''))
+          console.log(keys)
           const values = window.location.hash.match(/{(.*?)}/g)
           var attributes = {}
           keys.forEach((key, index) => {
             attributes[key] = values[index]
           })
+          Object.keys(n.router.data).forEach(key => {
+            if (key.indexOf('}')) console.log(key.replace(/{(.*?)}/g, '*'))
+          })
           console.log(JSON.stringify(attributes))
-          return findurl[0]
+          return undefined
         } else return n.router.data['default']
       }
     },
