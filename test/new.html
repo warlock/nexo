@@ -4,21 +4,24 @@
   <script>
     n.router.set({
       default: { name: 'ex' },
-      '#/lista': { name: 'list' },
-      // '#/user': { name: 'user', attributes: {} },
-      '#/user/{id}/{data}': { name: 'user', attributes: {} }
+      '#/listplay': { name: 'list' },
+      '#/user': { name: 'user', attributes: {} },
+      '#/user/{id}/{name}': { name: 'user' },
+      '#/superuser': { name: 'user', attributes: { name: 'superuser' } }
     })
 
     n.state.name = 'Inici'
 
     n.components['list'] = {
       html: (state, attr) => `
-      <p>${state.name} is ${attr.nom}</p>
+      <p><strong>COMPONENT LIST</strong></p>
+      <p>Get state name: ${state.name}</p>
+      <p>Attribute name: ${attr.name}</p>
       <ex></ex>            
       <user></user>
       `,
       attr: {
-        nom: 'josep'
+        name: 'List component name',
       },
       ready: n => {
         console.log('Component list ready!')
@@ -29,11 +32,15 @@
     }
 
     n.components['user'] = {
-      html: (state, attr) => `<p>El nom del usuari es: ${attr.nom} el estat es ${state.name}</p>
+      html: (state, attr) => `
+      <p>State name: ${state.name}</p>
+      <p>Attribute name: ${attr.name}</p>
+      <p>Attribute id: ${attr.id}</p>
       <ex></ex>
       `,
       attr: {
-        nom: 'user'
+        name: 'default user name',
+        id: '0'
       },
       load: (n, attr) => {
         n.set('name', 'buuu')
@@ -41,7 +48,7 @@
     }
 
     n.components['ex'] = {
-      html: (state, attr) => `<p>hola</p>`
+      html: (state, attr) => `<p>Hello world!</p>`
     }
   </script>
   </head>

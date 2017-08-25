@@ -13,25 +13,29 @@ const n = {
     actual: () => {
       if (!type.isEmpty(n.router.data[window.location.hash])) return n.router.data[window.location.hash]
       else {
-        console.log('work in progress')
-        var reg = new RegExp(/{(.*?)}/g)
-        var urlfind = Object.keys(n.router.data).filter(url => {
-          return reg.test(url)
+        const subs = new RegExp(/{(.*?)}/g)
+        const checkurl = Object.keys(n.router.data).filter(url => {
+          const clean = url.replace(subs, '(.*)')
+          const regclean = new RegExp(clean + '$', 'i')
+          return regclean.test(window.location.hash)
         })
 
-        if (urlfind.length > 0) {
-          const keys = urlfind[0].match(/{(.*?)}/g).map(x => x.replace('}', '').replace('{', ''))
-          console.log(keys)
-          const values = window.location.hash.match(/{(.*?)}/g)
-          var attributes = {}
-          keys.forEach((key, index) => {
-            attributes[key] = values[index]
+        if (checkurl.length > 0) {
+          var data = {}
+          const keys = checkurl[0].match(subs)
+          const clean = checkurl[0].replace(subs, '(.*)')
+          const values = window.location.hash.match(new RegExp(clean, 'i'))
+          var count = 1
+          keys.forEach(key => {
+            const newkey = key.replace('{', '').replace('}', '')
+            data[newkey] = values[count]
+            count++
           })
-          Object.keys(n.router.data).forEach(key => {
-            if (key.indexOf('}')) console.log(key.replace(/{(.*?)}/g, '*'))
-          })
-          console.log(JSON.stringify(attributes))
-          return undefined
+          const resp = {
+            name: n.router.data[checkurl[0]].name,
+            attributes: data
+          }
+          return resp
         } else return n.router.data['default']
       }
     },
@@ -50,7 +54,7 @@ const n = {
       html: () => {
         const actual = n.router.actual()
         if (type.isEmpty(actual)) return ''
-        const comp = n.components[actual.name].html(n.state, n.makeAttr(actual.name, actual.attributes | {}))
+        const comp = n.components[actual.name].html(n.state, n.makeAttr(actual.name, actual.attributes))
         const htmlTag = {
           type: 'Element',
           tagName: 'div',
@@ -70,11 +74,15 @@ const n = {
     }
   },
   makeAttr (name, attrs) {
-    var accAttr = n.components[name].attr ? Object.assign({}, n.components[name].attr) : {}
-    Object.keys(attrs).forEach(attr => {
-      accAttr[attr] = attrs[attr]
-    })
-    return accAttr
+    if (type.isEmpty(attrs) && type.isEmpty(n.components[name].attr)) return {}
+    else if (type.isEmpty(attrs)) return n.components[name].attr
+    else {
+      var accAttr = Object.assign({}, n.components[name].attr)
+      Object.keys(attrs).forEach(attr => {
+        accAttr[attr] = attrs[attr]
+      })
+      return accAttr
+    }
   },
   render (element) {
     if (Array.isArray(element)) {
