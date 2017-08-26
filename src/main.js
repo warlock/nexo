@@ -21,19 +21,19 @@ const n = {
         })
 
         if (checkurl.length > 0) {
-          var data = {}
+          var attrdata = {}
           const keys = checkurl[0].match(subs)
           const clean = checkurl[0].replace(subs, '(.*)')
           const values = window.location.hash.match(new RegExp(clean, 'i'))
           var count = 1
           keys.forEach(key => {
             const newkey = key.replace('{', '').replace('}', '')
-            data[newkey] = values[count]
+            attrdata[newkey] = values[count]
             count++
           })
           const resp = {
             name: n.router.data[checkurl[0]].name,
-            attributes: data
+            attributes: attrdata
           }
           return resp
         } else return n.router.data['default']
@@ -128,10 +128,7 @@ const n = {
       }
     })
 
-    window.addEventListener('hashchange', () => {
-      console.log('change')
-      n.done()
-    }, false)
+    window.addEventListener('hashchange', n.done, false)
   },
   get (element) {
     return document.querySelector(element)
