@@ -63,6 +63,21 @@ const n = {
         }
         return tohtml(htmlTag)
       }
+    },
+    n: {
+      html: (state, attr) => {
+        if (!type.isEmpty(attr.if)) return 'IF'
+        else if (!type.isEmpty(attr.else)) return 'ELSE'
+        else if (!type.isEmpty(attr.for)) return 'FOR'
+        else if (!type.isEmpty(attr.filter)) return 'FILTER'
+        else return 'XXXX'
+      },
+      attr: {
+        if: '',
+        else: '',
+        for: '',
+        filter: ''
+      }
     }
   },
   state: {},
