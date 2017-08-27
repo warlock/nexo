@@ -100,7 +100,7 @@ const n = {
     }
   },
   render (element) {
-    if (Array.isArray(element)) {
+    if (type.isArray(element)) {
       return element.map(n.render)
     } else {
       if (element.type === 'Element' && undefined !== n.components[element.tagName]) {
