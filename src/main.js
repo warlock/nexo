@@ -103,13 +103,13 @@ const n = {
     if (type.isArray(element)) {
       return element.map(n.render)
     } else {
-      if (element.type === 'Element' && undefined !== n.components[element.tagName]) {
-        if (undefined !== n.components[element.tagName].load) n.components[element.tagName].load(n, n.makeAttr(element.tagName, element.attributes))
+      if (element.type === 'Element' && !type.isEmpty(n.components[element.tagName])) {
+        if (!type.isEmpty(n.components[element.tagName].load)) n.components[element.tagName].load(n, n.makeAttr(element.tagName, element.attributes))
         const htmlSchema = n.components[element.tagName].html(n.state, n.makeAttr(element.tagName, element.attributes))
         const jsonSchema = tojson.parse(htmlSchema)
-        if (undefined !== jsonSchema.children && jsonSchema.children.length > 0) jsonSchema.children = n.render(jsonSchema.children)
+        if (!type.isEmpty(jsonSchema.children) && jsonSchema.children.length > 0) jsonSchema.children = n.render(jsonSchema.children)
         const loop = n.render(jsonSchema)
-        if (undefined !== n.components[element.tagName].ready) {
+        if (!type.isEmpty(n.components[element.tagName].ready)) {
           n.stack.push({
             name: element.tagName,
             attributes: n.makeAttr(element.tagName, element.attributes)
