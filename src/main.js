@@ -58,25 +58,10 @@ const n = {
         const htmlTag = {
           type: 'Element',
           tagName: 'div',
-          attributes: { class: 'routerview' },
+          attributes: n.makeAttr(actual.name, actual.attributes),
           children: tojson.parse(comp)
         }
         return tohtml(htmlTag)
-      }
-    },
-    n: {
-      html: (state, attr) => {
-        if (!type.isEmpty(attr.if)) return 'IF'
-        else if (!type.isEmpty(attr.else)) return 'ELSE'
-        else if (!type.isEmpty(attr.for)) return 'FOR'
-        else if (!type.isEmpty(attr.filter)) return 'FILTER'
-        else return 'XXXX'
-      },
-      attr: {
-        if: '',
-        else: '',
-        for: '',
-        filter: ''
       }
     }
   },
@@ -96,6 +81,8 @@ const n = {
       Object.keys(attrs).forEach(attr => {
         accAttr[attr] = attrs[attr]
       })
+      if (!type.isEmpty(accAttr['class'])) accAttr.class = `${name} ${accAttr.class}`
+      else accAttr.class = name
       return accAttr
     }
   },
@@ -116,11 +103,19 @@ const n = {
           })
         }
 
-        return {
-          type: 'Element',
-          tagName: 'div',
-          attributes: n.makeAttr(element.tagName, element.attributes),
-          children: loop
+        if (!type.isEmpty(element.attributes['if']) && eval(element.attributes['if']) === false) {
+          return {
+            type: 'Element',
+            tagName: 'div',
+            attributes: { class: element.tagName }
+          }
+        } else {
+          return {
+            type: 'Element',
+            tagName: 'div',
+            attributes: n.makeAttr(element.tagName, element.attributes),
+            children: loop
+          }
         }
       } else return element
     }
