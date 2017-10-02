@@ -1,6 +1,7 @@
 const tojson = require('himalaya')
 const tohtml = require('himalaya/translate').toHTML
 const cookies = require('./cookies')
+const Component = require('./component')
 const type = require('tck')
 const event = require('eem')
 
