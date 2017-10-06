@@ -1,150 +1,66 @@
-const tojson = require('himalaya')
 const tohtml = require('himalaya/translate').toHTML
+const tojson = require('himalaya')
+const tck = require('tck')
+const event = require('eem')
 const cookies = require('./cookies')
 const Component = require('./component')
-const type = require('tck')
-const event = require('eem')
 
 const n = {
   on: event.on,
   emit: event.emit,
   delete: event.delete,
   cookies: cookies,
-  router: {
-    actual: () => {
-      if (!type.isEmpty(n.router.data[window.location.hash])) return n.router.data[window.location.hash]
-      else {
-        const subs = new RegExp(/{(.*?)}/g)
-        const checkurl = Object.keys(n.router.data).filter(url => {
-          const clean = url.replace(subs, '(.*)')
-          const regclean = new RegExp(clean + '$', 'i')
-          return regclean.test(window.location.hash)
-        })
-
-        if (checkurl.length > 0) {
-          var attrdata = {}
-          const keys = checkurl[0].match(subs)
-          const clean = checkurl[0].replace(subs, '(.*)')
-          const values = window.location.hash.match(new RegExp(clean, 'i'))
-          var count = 1
-          keys.forEach(key => {
-            const newkey = key.replace('{', '').replace('}', '')
-            attrdata[newkey] = values[count]
-            count++
-          })
-          const resp = {
-            name: n.router.data[checkurl[0]].name,
-            attributes: attrdata
-          }
-          return resp
-        } else return n.router.data['default']
-      }
-    },
-    options: { url: 'force' },
-    get (value) {
-      n.router.actual = value
-    },
-    set (value) {
-      n.router.data = value
-    },
-    data: {}
-  },
   stack: [],
-  components: {
-    routerview: {
-      html: () => {
-        const actual = n.router.actual()
-        if (type.isEmpty(actual)) return ''
-        const comp = n.components[actual.name].html(n.state, n.makeAttr(actual.name, actual.attributes))
-        const htmlTag = {
-          type: 'Element',
-          tagName: 'div',
-          attributes: n.makeAttr(actual.name, actual.attributes),
-          children: tojson.parse(comp)
+  components: {},
+  render (schema) {
+    if (tck.isArray(schema)) {
+      return schema.map(n.render)
+    } else {
+      if (schema.type === 'Element' && !tck.isEmpty(n.components[schema.tagName])) {
+        const component = new n.components[schema.tagName]()
+        component.tagName = schema.tagName
+        component.attributes = schema.attributes
+        component.children = schema.children
+        if (typeof component.ready === 'function') {
+          n.stack.push({
+            tagName: component.tagName,
+            attributes: component.attributes,
+            children: component.children,
+            ready: component.ready
+          })
         }
-        return tohtml(htmlTag)
+        return component.get()
+      } else {
+        return schema
       }
     }
   },
-  state: {},
-  schema: '',
-  set (name, value) {
-    if (value !== n.state[name]) {
-      n.state[name] = value
-      n.done()
+  run () {
+    while (n.stack.length) {
+      n.stack.shift().ready()
     }
   },
-  makeAttr (name, attrs) {
-    if (type.isEmpty(attrs) && type.isEmpty(n.components[name].attr)) return {}
-    else if (type.isEmpty(attrs)) return n.components[name].attr
-    else {
-      var accAttr = Object.assign({}, n.components[name].attr)
-      Object.keys(attrs).forEach(attr => {
-        accAttr[attr] = attrs[attr]
-      })
-      if (!type.isEmpty(accAttr['class'])) accAttr.class = `${name} ${accAttr.class}`
-      else accAttr.class = name
-      return accAttr
-    }
-  },
-  render (element) {
-    if (type.isArray(element)) {
-      return element.map(n.render)
-    } else {
-      if (element.type === 'Element' && !type.isEmpty(n.components[element.tagName])) {
-        if (!type.isEmpty(n.components[element.tagName].load)) n.components[element.tagName].load(n, n.makeAttr(element.tagName, element.attributes))
-        const htmlSchema = n.components[element.tagName].html(n.state, n.makeAttr(element.tagName, element.attributes))
-        const jsonSchema = tojson.parse(htmlSchema)
-        if (!type.isEmpty(jsonSchema.children) && jsonSchema.children.length > 0) jsonSchema.children = n.render(jsonSchema.children)
-        const loop = n.render(jsonSchema)
-        if (!type.isEmpty(n.components[element.tagName].ready)) {
-          n.stack.push({
-            name: element.tagName,
-            attributes: n.makeAttr(element.tagName, element.attributes)
-          })
-        }
-
-        if (!type.isEmpty(element.attributes['if']) && eval(element.attributes['if']) === false) {
-          return {
-            type: 'Element',
-            tagName: 'div',
-            attributes: { class: element.tagName }
-          }
-        } else {
-          return {
-            type: 'Element',
-            tagName: 'div',
-            attributes: n.makeAttr(element.tagName, element.attributes),
-            children: loop
-          }
-        }
-      } else return element
-    }
-  },
-  done () {
-    const newSchema = n.render(n.schema)
-    const htmlSchema = tohtml(newSchema)
-    n.main.innerHTML = htmlSchema
-  },
-  start () {
+  start (main) {
     document.addEventListener('DOMContentLoaded', () => {
-      n.main = document.getElementById('main')
-      const main = n.main.innerHTML
-      n.schema = tojson.parse(main)
-      n.done()
+      const main = n.q('#main')
+      const schema = tojson.parse(main.innerHTML)
+      const html = n.render(schema)
+      main.innerHTML = tohtml(html)
 
       while (n.stack.length > 0) {
         const ready = n.stack.shift()
-        n.components[ready.name].ready(n, ready.attributes)
+        ready.ready(n, ready.attributes)
       }
     })
 
-    window.addEventListener('hashchange', n.done, false)
+    // window.addEventListener('hashchange', n.done, false)
   },
-  get (element) {
+  q (element) {
     return document.querySelector(element)
   }
 }
+
+n.Component = Component
 
 n.start()
 

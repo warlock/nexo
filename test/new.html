@@ -2,58 +2,26 @@
   <head>
   <script src="../nexo.js"></script>
   <script>
-    n.router.set({
-      default: { name: 'ex' },
-      '#/listplay': { name: 'list' },
-      '#/user': { name: 'user', attributes: {} },
-      '#/user/{id}/{name}': { name: 'user' },
-      '#/superuser': { name: 'user', attributes: { name: 'superuser' } }
-    })
+    class Kom extends n.Component {
+      html () {
+        return `Hola ${this.tagName} -> ${JSON.stringify(this.attributes)} -> CHILDREN ${JSON.stringify(this.children)} ...`
+      }
 
-    n.state.name = 'Inici'
+      load () {
+        console.log(`Load ${this.tagName} -> ${JSON.stringify(this.attributes)} -> CHILDREN ${JSON.stringify(this.children)} ...`)
+      }
 
-    n.components['list'] = {
-      html: (state, attr) => `
-      <p><strong>COMPONENT LIST</strong></p>
-      <p>Get state name: ${state.name}</p>
-      <p>Attribute name: ${attr.name}</p>
-      <ex></ex>            
-      <user></user>
-      `,
-      attr: {
-        name: 'List component name',
-      },
-      ready: n => {
-        console.log('Component list ready!')
-        setInterval(() => {
-          n.set('name', Math.random().toString(36).substr(2, 10))
-        }, 2000)
+      ready () {
+        console.log(`Ready ${this.tagName} -> ${JSON.stringify(this.attributes)} -> CHILDREN ${JSON.stringify(this.children)} ...`)
       }
     }
 
-    n.components['user'] = {
-      html: (state, attr) => `
-      <p>State name: ${state.name}</p>
-      <p>Attribute name: ${attr.name}</p>
-      <p>Attribute id: ${attr.id}</p>
-      <ex></ex>
-      `,
-      attr: {
-        name: 'default user name',
-        id: '0'
-      },
-      load: (n, attr) => {
-        n.set('name', 'buuu')
-      }
-    }
-
-    n.components['ex'] = {
-      html: (state, attr) => `<p>Hello world!</p>`
-    }
+    n.components['kom'] = Kom
   </script>
   </head>
   <body>
     <div id="main">
+      <kom bu="bbr" for="i to x">valer</kom>
       <strong>START</strong>
       <routerview></routerview>
       <ex if="1 > 3"></ex>

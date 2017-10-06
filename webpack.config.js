@@ -1,4 +1,4 @@
-var path = require('path')
+const path = require('path')
 
 module.exports = {
   entry: './src/main.js',
@@ -7,5 +7,10 @@ module.exports = {
     library: 'n',
     filename: 'nexo.js',
     libraryTarget: 'umd'
+  },
+  module: {
+    rules: [
+      { test: /\.js$/, loader: "babel-loader" }
+    ]
   }
 }
