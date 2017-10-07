@@ -1,6 +1,6 @@
 {
   "name": "nexo",
-  "version": "2.0.0-pre",
+  "version": "2.0.0",
   "description": "Lightweight Javascript Web Components for Frontend",
   "main": "nexo.js",
   "scripts": {
@@ -17,14 +17,12 @@
     "client-side",
     "browser",
     "framework",
-    "angular",
     "component",
     "components",
     "framework",
     "gui",
     "form",
     "website",
-    "model",
     "website"
   ],
   "author": "Josep Subils <js@js.gl> (http://js.gl)",
