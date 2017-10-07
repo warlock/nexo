@@ -16,16 +16,21 @@ http://nexo.js.gl
 
 ### Demo component:
 ```js
-class Kom extends Component {
-  constructor (schema) {
-    super(schema)
+class Kom extends n.Component {
+  load () {
     this.setAttributes({
       a: 'b'
     })
   }
 
   html () {
-    return `Hola ${this.tagName} -> ${JSON.stringify(this.attributes)} -> CHILDREN ${JSON.stringify(this.children)} ...`
+    return `<b> ${this.tagName}</b><br>
+    Attributes recibed: ${JSON.stringify(this.attributes)}
+    Children components: ${JSON.stringify(this.children)}`
+  }
+
+  ready () {
+    console.log(`Component ${this.tagName} is ready!`)
   }
 }
 ```
