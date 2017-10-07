@@ -8,7 +8,7 @@
       }
 
       load () {
-        console.log(`Load ${this.tagName} -> ${JSON.stringify(this.attributes)} -> CHILDREN ${JSON.stringify(this.children)} ...`)
+        console.log(`Load ${this.tagName} -> ${JSON.stringify(this.attributes)} -> CHILDREN ${JSON.stringify(this.children)} ... JULI: ${this.i}`)
       }
 
       ready () {
@@ -21,7 +21,7 @@
   </head>
   <body>
     <div id="main">
-      <kom bu="bbr" for="i to x">valer</kom>
+      <kom bu="bbr" for="i in [1, 2, 3]">valer</kom>
       <strong>START</strong>
       <routerview></routerview>
       <ex if="1 > 3"></ex>

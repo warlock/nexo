@@ -3,9 +3,10 @@ const tojson = require('himalaya')
 const tck = require('tck')
 const event = require('eem')
 const cookies = require('./cookies')
-const Component = require('./component')
 
 const n = {
+  tohtml: tohtml,
+  tojson: tojson.parse,
   on: event.on,
   emit: event.emit,
   delete: event.delete,
@@ -43,7 +44,7 @@ const n = {
   start (main) {
     document.addEventListener('DOMContentLoaded', () => {
       const main = n.q('#main')
-      const schema = tojson.parse(main.innerHTML)
+      const schema = n.tojson(main.innerHTML)
       const html = n.render(schema)
       main.innerHTML = tohtml(html)
 
@@ -60,7 +61,40 @@ const n = {
   }
 }
 
-n.Component = Component
+n.Component = class Component {
+  get () {
+    var attributes = Object.assign({}, this.attributes)
+    attributes.class = this.tagName
+    const render = this.render()
+    return {
+      type: 'Element',
+      tagName: 'div',
+      attributes: attributes,
+      children: render
+    }
+  }
+
+  render () {
+    if (this.load !== undefined) this.load()
+    if (this.attributes !== undefined && this.attributes.if !== undefined && eval(this.attributes['if']) === false) {
+      console.log('aqui1')
+      return []
+    } else if (this.attributes.for !== undefined) {
+      var res = []
+      const data = this.attributes.for.split(' in ')
+      const arrayfor = eval(data[1])
+      arrayfor.forEach(element => {
+        this.html[data[0]] = element
+        res.push(this.html())
+      })
+      return res
+    } else {
+      console.log('aqui3')
+      const template = n.tojson(this.html())
+      return template
+    }
+  }
+}
 
 n.start()
 
