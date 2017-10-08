@@ -4,27 +4,35 @@
   <script>
     class Kom extends n.Component {
       html () {
-        return `Hola ${this.tagName} -> ${JSON.stringify(this.attributes)} -> CHILDREN ${JSON.stringify(this.children)} ...`
+        return `Hola ${this.tagName} -> <ex bu="${this.i}"></ex><br>`
       }
 
       load () {
-        console.log(`Load ${this.tagName} -> ${JSON.stringify(this.attributes)} -> CHILDREN ${JSON.stringify(this.children)} ... JULI: ${this.i}`)
+        console.log(`Load ${this.tagName} !!!`)
       }
 
       ready () {
-        console.log(`Ready ${this.tagName} -> ${JSON.stringify(this.attributes)} -> CHILDREN ${JSON.stringify(this.children)} ...`)
+        console.log(`Ready ${this.tagName} !!!`)
       }
     }
 
-    n.components['kom'] = Kom
+    class Ex extends n.Component {
+      html () {
+        return `Ex component ${this.attributes.bu}`
+      }
+    }
+
+    n.components.kom = Kom
+    n.components.ex = Ex
   </script>
   </head>
+
+
+
   <body>
     <div id="main">
-      <kom bu="bbr" for="i in [1, 2, 3]">valer</kom>
-      <strong>START</strong>
-      <routerview></routerview>
-      <ex if="1 > 3"></ex>
+      <kom bu="bbr" for="i in [1, 2, 3]"></kom>
+      <ex bu="fora"></ex>
     </div>
   </body>
 </html>

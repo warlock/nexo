@@ -1,0 +1,26 @@
+<html>
+    <head>
+    <script src="../nexo.js"></script>
+    <script>
+        class Titol extends n.Component {
+            html () {
+                return `<h1>Hola ${this.attributes.nom}</h1>`
+            }
+        }
+
+        class Ficha extends n.Component {
+            html () {
+                return ``
+            }
+        }
+
+        n.components.titol = Titol
+    </script>
+    </head>
+    <body>
+        <div id="main">
+            <titol nom="Julia i Josep"></titol>
+            Aquesta es la web
+        </div>
+    </body>
+</html>

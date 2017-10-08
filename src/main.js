@@ -41,20 +41,20 @@ const n = {
       n.stack.shift().ready()
     }
   },
-  start (main) {
-    document.addEventListener('DOMContentLoaded', () => {
-      const main = n.q('#main')
-      const schema = n.tojson(main.innerHTML)
-      const html = n.render(schema)
-      main.innerHTML = tohtml(html)
+  start () {
+    const main = n.q('#main')
+    n.schema = n.tojson(main.innerHTML)
+    n.update()
+  },
+  update () {
+    const html = n.render(n.schema)
+    const main = n.q('#main')
+    main.innerHTML = tohtml(html)
 
-      while (n.stack.length > 0) {
-        const ready = n.stack.shift()
-        ready.ready(n, ready.attributes)
-      }
-    })
-
-    // window.addEventListener('hashchange', n.done, false)
+    while (n.stack.length > 0) {
+      const ready = n.stack.shift()
+      ready.ready(n, ready.attributes)
+    }
   },
   q (element) {
     return document.querySelector(element)
@@ -65,37 +65,39 @@ n.Component = class Component {
   get () {
     var attributes = Object.assign({}, this.attributes)
     attributes.class = this.tagName
+    if (attributes.for !== undefined) delete(attributes.for)
+    if (attributes.if !== undefined) delete(attributes.if)
     const render = this.render()
     return {
       type: 'Element',
       tagName: 'div',
       attributes: attributes,
-      children: render
+      children: n.render(render)
     }
   }
 
   render () {
     if (this.load !== undefined) this.load()
     if (this.attributes !== undefined && this.attributes.if !== undefined && eval(this.attributes['if']) === false) {
-      console.log('aqui1')
       return []
     } else if (this.attributes.for !== undefined) {
       var res = []
       const data = this.attributes.for.split(' in ')
       const arrayfor = eval(data[1])
       arrayfor.forEach(element => {
-        this.html[data[0]] = element
+        this[data[0]] = element
         res.push(this.html())
       })
-      return res
+      const template = n.tojson(res.join(''))
+      return template
     } else {
-      console.log('aqui3')
       const template = n.tojson(this.html())
       return template
     }
   }
 }
 
-n.start()
+document.addEventListener('DOMContentLoaded', n.start)
+// window.addEventListener('hashchange', n.done, false)
 
 module.exports = n
