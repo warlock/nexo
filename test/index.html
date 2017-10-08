@@ -2,25 +2,42 @@
     <head>
     <script src="../nexo.js"></script>
     <script>
-        class Titol extends n.Component {
+        class Title extends n.Component {
             html () {
                 return `<h1>Hola ${this.attributes.nom}</h1>`
             }
         }
 
-        class Ficha extends n.Component {
+        class List extends n.Component {
+            load () {
+                this.list = [
+                    { name: 'Josep', age: 32 },
+                    { name: 'Julia', age: 22 }
+                ]                
+            }
+
             html () {
-                return ``
+                return `<user for="user in ${JSON.stringify(this.list)}">`
             }
         }
 
-        n.components.titol = Titol
+        class User extends n.Component {
+            html () {
+                return `<title nom="User"></title>
+                    Name: ${this.user.name}<br>
+                    Age: ${this.user.age}<hr>`
+            }
+        }
+
+        n.components.title = Title
+        n.components.list = List
+        n.components.user = User
     </script>
     </head>
     <body>
         <div id="main">
-            <titol nom="Julia i Josep"></titol>
-            Aquesta es la web
+            <title nom="Julia i Josep"></title>
+            <list></list>
         </div>
     </body>
 </html>

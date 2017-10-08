@@ -43,8 +43,10 @@ const n = {
   },
   start () {
     const main = n.q('#main')
-    n.schema = n.tojson(main.innerHTML)
-    n.update()
+    if (main !== null) {
+      n.schema = n.tojson(main.innerHTML)
+      n.update()
+    } else throw Error('nexo: Not found element #main')
   },
   update () {
     const html = n.render(n.schema)
