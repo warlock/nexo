@@ -22,7 +22,7 @@ const n = {
         component.tagName = schema.tagName
         component.attributes = schema.attributes
         component.children = schema.children
-        if (typeof component.ready === 'function') {
+        if (tck.isFunction(component.ready)) {
           n.stack.push({
             tagName: component.tagName,
             attributes: component.attributes,
@@ -43,7 +43,7 @@ const n = {
   },
   start () {
     const main = n.q('#main')
-    if (main !== null) {
+    if (!tck.isEmpty(main)) {
       n.schema = n.tojson(main.innerHTML)
       n.update()
     } else throw Error('nexo: Not found element #main')
@@ -67,8 +67,8 @@ n.Component = class Component {
   get () {
     var attributes = Object.assign({}, this.attributes)
     attributes.class = this.tagName
-    if (attributes.for !== undefined) delete(attributes.for)
-    if (attributes.if !== undefined) delete(attributes.if)
+    if (!tck.isEmpty(this.attributes.for)) delete(attributes.for)
+    if (!tck.isEmpty(attributes.if)) delete(attributes.if)
     const render = this.render()
     return {
       type: 'Element',
@@ -79,10 +79,10 @@ n.Component = class Component {
   }
 
   render () {
-    if (this.load !== undefined) this.load()
-    if (this.attributes !== undefined && this.attributes.if !== undefined && eval(this.attributes['if']) === false) {
+    if (!tck.isEmpty(this.load)) this.load()
+    if (!tck.isEmpty(this.attributes) && !tck.isEmpty(this.attributes.if) && eval(this.attributes['if']) === false) {
       return []
-    } else if (this.attributes.for !== undefined) {
+    } else if (!tck.isEmpty(this.attributes.for)) {
       var res = []
       const data = this.attributes.for.split(' in ')
       const arrayfor = eval(data[1])
