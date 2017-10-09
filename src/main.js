@@ -31,9 +31,7 @@ const n = {
           })
         }
         return component.get()
-      } else {
-        return schema
-      }
+      } else return schema
     }
   },
   run () {
@@ -58,6 +56,12 @@ const n = {
       ready.ready(n, ready.attributes)
     }
   },
+  request (schema) {
+    if (!tck.isEmpty(schema)) n.schema = n.tojson(schema)
+    else throw Error('nexo: Not found schema')
+    const html = n.render(n.schema)
+    return tohtml(html)
+  },
   q (element) {
     return document.querySelector(element)
   }
@@ -69,6 +73,10 @@ n.Component = class Component {
     attributes.class = this.tagName
     if (!tck.isEmpty(this.attributes.for)) delete(attributes.for)
     if (!tck.isEmpty(attributes.if)) delete(attributes.if)
+    Object.keys(attributes).forEach(attr => {
+      if (attr.indexOf('on:') > -1) delete(attributes[attr])
+    })
+
     const render = this.render()
     return {
       type: 'Element',
@@ -99,7 +107,9 @@ n.Component = class Component {
   }
 }
 
-document.addEventListener('DOMContentLoaded', n.start)
-// window.addEventListener('hashchange', n.done, false)
+if (typeof window !== 'undefined') {
+  document.addEventListener('DOMContentLoaded', n.start)
+  // window.addEventListener('hashchange', n.done, false)
+}
 
 module.exports = n
