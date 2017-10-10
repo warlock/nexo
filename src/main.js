@@ -31,7 +31,16 @@ const n = {
           })
         }
         return component.get()
-      } else return schema
+      } else {
+        if (!tck.isEmpty(schema.children) && tck.isArray(schema.children)) {
+          return {
+            type: 'Element',
+            tagName: schema.tagName,
+            attributes: schema.attributes,
+            children: n.render(schema.children)
+          }
+        } else return schema
+      }
     }
   },
   run () {
