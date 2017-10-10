@@ -22,6 +22,6 @@ class Ex extends n.Component {
 
 n.components.kom = Kom
 n.components.ex = Ex
-const html = n.request(`<kom bu="bbr" for="i in [1, 2, 3]"></kom>
-<ex bu="fora"></ex>`)
+const html = n.request(`<kom bu="bbr" for="i in [1, 2, 3]"></kom><strong><ex bu="fora"></ex></strong>`)
+
 console.log(html)

@@ -2,11 +2,15 @@
   <head>
   <script src="../nexo.js"></script>
   <script>
+
+
     class Title extends n.Component {
       html () {
         return `<h1>Hola ${this.attributes.nom}</h1>`
       }
     }
+
+
 
     class List extends n.Component {
       load () {
@@ -20,6 +24,8 @@
         return `<user for="user in ${JSON.stringify(this.list)}">`
       }
     }
+
+    
 
     class User extends n.Component {
       html () {
