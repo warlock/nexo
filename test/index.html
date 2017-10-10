@@ -1,43 +1,43 @@
 <html>
-    <head>
-    <script src="../nexo.js"></script>
-    <script>
-        class Title extends n.Component {
-            html () {
-                return `<h1>Hola ${this.attributes.nom}</h1>`
-            }
-        }
+  <head>
+  <script src="../nexo.js"></script>
+  <script>
+    class Title extends n.Component {
+      html () {
+        return `<h1>Hola ${this.attributes.nom}</h1>`
+      }
+    }
 
-        class List extends n.Component {
-            load () {
-                this.list = [
-                    { name: 'Josep', age: 32 },
-                    { name: 'Julia', age: 22 }
-                ]                
-            }
+    class List extends n.Component {
+      load () {
+        this.list = [
+          { name: 'Josep', age: 32 },
+          { name: 'Julia', age: 22 }
+        ]        
+      }
 
-            html () {
-                return `<user for="user in ${JSON.stringify(this.list)}">`
-            }
-        }
+      html () {
+        return `<user for="user in ${JSON.stringify(this.list)}">`
+      }
+    }
 
-        class User extends n.Component {
-            html () {
-                return `<title nom="User"></title>
-                    Name: ${this.user.name}<br>
-                    Age: ${this.user.age}<hr>`
-            }
-        }
+    class User extends n.Component {
+      html () {
+        return `<title nom="User"></title>
+          Name: ${this.user.name}<br>
+          Age: ${this.user.age}<hr>`
+      }
+    }
 
-        n.components.title = Title
-        n.components.list = List
-        n.components.user = User
-    </script>
-    </head>
-    <body>
-        <div id="main">
-            <title nom="Julia i Josep"></title>
-            <list></list>
-        </div>
-    </body>
+    n.components.title = Title
+    n.components.list = List
+    n.components.user = User
+  </script>
+  </head>
+  <body>
+    <div id="main">
+      <title nom="Julia i Josep"></title>
+      <list></list>
+    </div>
+  </body>
 </html>
