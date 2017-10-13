@@ -78,20 +78,46 @@ const n = {
 
 n.Component = class Component {
   get () {
-    var attributes = Object.assign({}, this.attributes)
-    attributes.class = this.tagName
-    if (!tck.isEmpty(this.attributes.for)) delete(attributes.for)
-    if (!tck.isEmpty(attributes.if)) delete(attributes.if)
-    Object.keys(attributes).forEach(attr => {
-      if (attr.indexOf('on:') > -1) delete(attributes[attr])
+    var attributes = {}
+    Object.keys(this.attributes).forEach(key => {
+      if (key === 'id') attributes.id = this.attributes.id
+      else if (key === 'className') {
+        attributes.class = this.attributes.className
+        if (attributes.class.indexOf(this.tagName) < 0) {
+          attributes.class += ` ${this.tagName}`
+        }
+      }
     })
 
+    if (tck.isEmpty(attributes.class)) attributes.class = this.tagName  
+
     const render = this.render()
-    return {
-      type: 'Element',
-      tagName: 'div',
-      attributes: attributes,
-      children: n.render(render)
+    
+    if (tck.isEmpty(this.attributes.each)) {
+      return {
+        type: 'Element',
+        tagName: 'div',
+        attributes: attributes,
+        children: n.render(render)
+      }
+    } else {
+      const children = render.map(element => {
+        return {
+          type: 'Element',
+          tagName: 'div',
+          attributes: attributes,
+          children: n.render(element)
+        }
+      })
+
+      const attreach = Object.assign({}, attributes)
+      attreach.class = attributes.class.replace(this.tagName, `${this.tagName}-each`)
+      return {
+        type: 'Element',
+        tagName: 'div',
+        attributes: attreach,
+        children: children
+      }
     }
   }
 
@@ -99,16 +125,13 @@ n.Component = class Component {
     if (!tck.isEmpty(this.load)) this.load()
     if (!tck.isEmpty(this.attributes) && !tck.isEmpty(this.attributes.if) && eval(this.attributes['if']) === false) {
       return []
-    } else if (!tck.isEmpty(this.attributes.for)) {
+    } else if (!tck.isEmpty(this.attributes.each)) {
       var res = []
-      const data = this.attributes.for.split(' in ')
-      const arrayfor = eval(data[1])
-      arrayfor.forEach(element => {
-        this[data[0]] = element
-        res.push(this.html())
+      const arrayEach = eval(this.attributes.each)
+      arrayEach.forEach(element => {
+        res.push(n.tojson(this.html(element)))
       })
-      const template = n.tojson(res.join(''))
-      return template
+      return res
     } else {
       const template = n.tojson(this.html())
       return template
@@ -118,7 +141,7 @@ n.Component = class Component {
 
 if (typeof window !== 'undefined') {
   document.addEventListener('DOMContentLoaded', n.start)
-  // window.addEventListener('hashchange', n.done, false)
+  window.addEventListener('hashchange', n.update, false)
 }
 
 module.exports = n

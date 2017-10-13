@@ -6,7 +6,7 @@
 
     class Title extends n.Component {
       html () {
-        return `<h1>Hola ${this.attributes.nom}</h1>`
+        return `<h1>Hello ${this.attributes.logo} !!!</h1>`
       }
     }
 
@@ -21,17 +21,17 @@
       }
 
       html () {
-        return `<user for="user in ${JSON.stringify(this.list)}">`
+        return `<user each="${JSON.stringify(this.list)}">`
       }
     }
 
     
 
     class User extends n.Component {
-      html () {
-        return `<title nom="User"></title>
-          Name: ${this.user.name}<br>
-          Age: ${this.user.age}<hr>`
+      html (user) {
+        return `<title logo=" user: ${user.name}"></title>
+          Name: ${user.name}<br>
+          Age: ${user.age}<hr>`
       }
     }
 
@@ -42,8 +42,8 @@
   </head>
   <body>
     <div id="main">
-      <title nom="Julia i Josep"></title>
-      <list></list>
+      <title logo="Users List!"></title>
+      <list class="bu"></list>
     </div>
   </body>
 </html>

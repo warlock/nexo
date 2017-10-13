@@ -3,8 +3,8 @@
   <script src="../nexo.js"></script>
   <script>
     class Kom extends n.Component {
-      html () {
-        return `Hola ${this.tagName} -> <ex bu="${this.i}"></ex><br>`
+      html (element) {
+        return `Hola ${this.tagName} -> <ex bu="${element}"></ex><br>`
       }
 
       load () {
@@ -28,7 +28,7 @@
   </head>
   <body>
     <div id="main">
-      <kom bu="bbr" for="i in [1, 2, 3]"></kom>
+      <kom bu="bbr" each="[1, 2, 3]"></kom>
       <ex bu="fora"></ex>
     </div>
   </body>
