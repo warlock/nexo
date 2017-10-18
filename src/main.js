@@ -101,7 +101,6 @@ n.Component = class Component {
       }
     } else {
       const children = render.map(element => {
-        console.log(JSON.stringify(render))
         const attrchild = Object.assign({}, attributes)        
         const uniqkey = Math.random().toString(36).substr(2, 10)
         this.makeEvent(uniqkey, events)
@@ -154,7 +153,6 @@ n.Component = class Component {
   }
 
   addEvent (key, event, action) {
-    console.log(`KEY: ${key} - EVENT: ${event}`)
     document.getElementsByClassName(key)[0].addEventListener(event, () => {
       n.stackEvent[key][action]()
     })
