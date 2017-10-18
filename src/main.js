@@ -77,23 +77,6 @@ const n = {
 }
 
 n.Component = class Component {
-  filterAttributes () {
-    var events = {}
-    var attributes = {}
-    Object.keys(this.attributes).forEach(key => {
-      if (key === 'id') attributes.id = this.attributes.id
-      else if (key === 'className') {
-        attributes.class = this.attributes.className
-        if (attributes.class.indexOf(this.tagName) < 0) {
-          attributes.class += ` ${this.tagName}`
-        }
-      } else if (key.indexOf('on:') > -1) {
-        const eventName = key.split('on:')
-        events[eventName[1]] = this.attributes[key]      
-      }
-    })
-    return { events: events, attributes: attributes }
-  }
 
   get () {
     const cleanAttr = this.filterAttributes()
@@ -105,19 +88,10 @@ n.Component = class Component {
     const render = this.render()
     
     if (tck.isEmpty(this.attributes.each)) {
-      const listEvents = Object.keys(events)
-      if (listEvents.length > 0) {
-        const uniqkey = Math.random().toString(36).substr(2, 10)
-        attributes.class += ` ${uniqkey}`
-        listEvents.forEach(ev => {
-          if (tck.isEmpty(n.stackEvent[uniqkey])) n.stackEvent[uniqkey] = {}
-          n.stackEvent[uniqkey][events[ev]] = this[events[ev]]
-          
-          n.stack.push(() => {          
-            this.addEvent(uniqkey, ev, events[ev])
-          })
-        })
-      }
+      // EVENTS MAKER
+      const uniqkey = Math.random().toString(36).substr(2, 10)
+      this.makeEvent(uniqkey, events)
+      attributes.class += ` ${uniqkey}`
 
       return {
         type: 'Element',
@@ -127,10 +101,15 @@ n.Component = class Component {
       }
     } else {
       const children = render.map(element => {
+        console.log(JSON.stringify(render))
+        const attrchild = Object.assign({}, attributes)        
+        const uniqkey = Math.random().toString(36).substr(2, 10)
+        this.makeEvent(uniqkey, events)
+        attrchild.class += ` ${uniqkey}`
         return {
           type: 'Element',
           tagName: 'div',
-          attributes: attributes,
+          attributes: attrchild,
           children: n.render(element)
         }
       })
@@ -179,6 +158,38 @@ n.Component = class Component {
     document.getElementsByClassName(key)[0].addEventListener(event, () => {
       n.stackEvent[key][action]()
     })
+  }
+
+  filterAttributes () {
+    var events = {}
+    var attributes = {}
+    Object.keys(this.attributes).forEach(key => {
+      if (key === 'id') attributes.id = this.attributes.id
+      else if (key === 'className') {
+        attributes.class = this.attributes.className
+        if (attributes.class.indexOf(this.tagName) < 0) {
+          attributes.class += ` ${this.tagName}`
+        }
+      } else if (key.indexOf('on:') > -1) {
+        const eventName = key.split('on:')
+        events[eventName[1]] = this.attributes[key]      
+      }
+    })
+    return { events: events, attributes: attributes }
+  }
+
+  makeEvent (uniqkey, events) {
+    const listEvents = Object.keys(events)
+    if (listEvents.length > 0) {
+      listEvents.forEach(ev => {
+        if (tck.isEmpty(n.stackEvent[uniqkey])) n.stackEvent[uniqkey] = {}
+        n.stackEvent[uniqkey][events[ev]] = this[events[ev]]
+        
+        n.stack.push(() => {          
+          this.addEvent(uniqkey, ev, events[ev])
+        })
+      })
+    }
   }
 }
 
