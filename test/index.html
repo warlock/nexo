@@ -21,7 +21,7 @@
       }
 
       html () {
-        return `<user each="${JSON.stringify(this.list)}">`
+        return `<user on:click="test" each="${JSON.stringify(this.list)}">`
       }
     }
 
@@ -32,6 +32,10 @@
         return `<title logo=" user: ${user.name}"></title>
           Name: ${user.name}<br>
           Age: ${user.age}<hr>`
+      }
+
+      test () {
+        console.log("User clicked")
       }
     }
 

@@ -20,6 +20,10 @@
       html () {
         return `Ex component ${this.attributes.bu}`
       }
+
+      test () {
+        console.log("Hi!")
+      }
     }
 
     n.components.kom = Kom
@@ -29,7 +33,7 @@
   <body>
     <div id="main">
       <kom bu="bbr" each="[1, 2, 3]"></kom>
-      <ex bu="fora"></ex>
+      <ex on:click="test" bu="fora"></ex>
     </div>
   </body>
 </html>

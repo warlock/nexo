@@ -12,6 +12,7 @@ const n = {
   delete: event.delete,
   cookies: cookies,
   stack: [],
+  stackEvent: {},
   components: {},
   render (schema) {
     if (tck.isArray(schema)) {
@@ -45,7 +46,9 @@ const n = {
   },
   run () {
     while (n.stack.length) {
-      n.stack.shift().ready()
+      const element = n.stack.shift()
+      if (tck.isSet(element.ready)) element.ready()
+      else element()
     }
   },
   start () {
@@ -56,14 +59,11 @@ const n = {
     } else throw Error('nexo: Not found element #main')
   },
   update () {
+    n.stackEvent = {}
     const html = n.render(n.schema)
     const main = n.q('#main')
     main.innerHTML = tohtml(html)
-
-    while (n.stack.length > 0) {
-      const ready = n.stack.shift()
-      ready.ready(n, ready.attributes)
-    }
+    n.run()
   },
   request (schema) {
     if (tck.isSet(schema)) n.schema = n.tojson(schema)
@@ -77,7 +77,8 @@ const n = {
 }
 
 n.Component = class Component {
-  get () {
+  filterAttributes () {
+    var events = {}
     var attributes = {}
     Object.keys(this.attributes).forEach(key => {
       if (key === 'id') attributes.id = this.attributes.id
@@ -86,14 +87,38 @@ n.Component = class Component {
         if (attributes.class.indexOf(this.tagName) < 0) {
           attributes.class += ` ${this.tagName}`
         }
+      } else if (key.indexOf('on:') > -1) {
+        const eventName = key.split('on:')
+        events[eventName[1]] = this.attributes[key]      
       }
     })
+    return { events: events, attributes: attributes }
+  }
+
+  get () {
+    const cleanAttr = this.filterAttributes()
+    const events = cleanAttr.events
+    const attributes = cleanAttr.attributes
 
     if (tck.isEmpty(attributes.class)) attributes.class = this.tagName  
 
     const render = this.render()
     
     if (tck.isEmpty(this.attributes.each)) {
+      const listEvents = Object.keys(events)
+      if (listEvents.length > 0) {
+        const uniqkey = Math.random().toString(36).substr(2, 10)
+        attributes.class += ` ${uniqkey}`
+        listEvents.forEach(ev => {
+          if (tck.isEmpty(n.stackEvent[uniqkey])) n.stackEvent[uniqkey] = {}
+          n.stackEvent[uniqkey][events[ev]] = this[events[ev]]
+          
+          n.stack.push(() => {          
+            this.addEvent(uniqkey, ev, events[ev])
+          })
+        })
+      }
+
       return {
         type: 'Element',
         tagName: 'div',
@@ -123,14 +148,12 @@ n.Component = class Component {
 
   render () {
     if (tck.isSet(this.load)) this.load()
+
     if (tck.isSet(this.attributes) && tck.isSet(this.attributes.if) && eval(this.attributes['if']) === false) {
       return []
     } else if (tck.isSet(this.attributes.each)) {
       const eachRes = this.eachAttribute(this.attributes.each)
       return eachRes
-    } else if (this.foundEvent(this.attributes.each)) {
-      const uniqkey = Math.random().toString(36).substr(2, 10)
-      console.log('found event!')      
     } else {
       const template = n.tojson(this.html())
       return template
@@ -149,6 +172,13 @@ n.Component = class Component {
       res.push(n.tojson(this.html(element)))
     })
     return res
+  }
+
+  addEvent (key, event, action) {
+    console.log(`KEY: ${key} - EVENT: ${event}`)
+    document.getElementsByClassName(key)[0].addEventListener(event, () => {
+      n.stackEvent[key][action]()
+    })
   }
 }
 
