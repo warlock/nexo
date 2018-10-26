@@ -1,3 +1,6 @@
+This project was abandoned in favor of the other libraries
+I recommend to use the Vue.js or React.js
+
 # nexo
 > Lightweight **Javascript** Web Components for Frontend
 
